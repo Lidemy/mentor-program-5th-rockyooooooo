@@ -9,8 +9,9 @@ Git 不是單純的把先前的版本複製一份到新的資料夾，而是記�
 Git 可以很清楚的顯示各自的差異，並決定要如何合併兩個不一樣的版本。甚至連在網路上路過看到你們的程式碼的熱心民眾也可以對這個專案提出他的改善版本。
 
 ####Git 的基本使用
+
 1. `git init` - 把目前的資料夾交給 Git 來進行版本控制
-2. `git add` - 把修改過的檔案加入 Git 的**暫存區**，可以用`git add .`來把全部有經過變更的檔案加入暫存區
+2. `git add (filename)` - 把修改過的檔案加入 Git 的**暫存區**，可以用`git add .`來把全部有經過變更的檔案加入暫存區
 3. `git commit -m "(commit message)"` - 把暫存區裡面的檔案正式加入版控，可以在""裡輸入這次 commit 修改了那些地方，以後才知道這個 commit 到底做了什麼
 4. `git remote add origin (repo url)` - 在 repo url 這個網址新增一個遠端的節點叫做 origin
 5. `git push origin master` - 把本地的 master 分支上傳到 origin 這個遠端節點的同名分支
