@@ -7,12 +7,6 @@ function printFactor(n) {
   return factors
 }
 
-// 判斷因數是否只有兩個，照題目要求，因數只有一個或多於兩個，都視為合數
-function prime(n) {
-  const isPrime = printFactor(n).length === 2
-  console.log(isPrime ? 'Prime' : 'Composite')
-}
-
 /* -------------------LIOJ------------------- */
 const readline = require('readline')
 
@@ -35,5 +29,5 @@ rl.on('close', () => {
 // 上面都不用管，只需要完成這個 function 就好，可以透過 lines[i] 拿取內容
 function solve(lines) {
   const inputs = lines.slice(1).map((el) => parseInt(el, 10))
-  for (const input of inputs) prime(input)
+  for (const input of inputs) console.log(printFactor(input).length === 2 ? 'Prime' : 'Composite') // 判斷因數是否只有兩個，照題目要求，因數只有一個或多於兩個，都視為合數
 }

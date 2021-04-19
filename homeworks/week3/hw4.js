@@ -1,14 +1,15 @@
-function Palindrome(str) {
-  let i = 0
-  let j = str.length - 1
+// 後來才想到，字串根本不用這麼麻煩，但還是留一下我思考的痕跡 Q_Q
+// function Palindrome(str) {
+//   let i = 0
+//   let j = str.length - 1
 
-  while (i < str.length && j >= 0) {
-    if (str[i] !== str[j]) return console.log('False')
-    i += 1
-    j -= 1
-  }
-  return console.log('True')
-}
+//   while (i < str.length && j >= 0) {
+//     if (str[i] !== str[j]) return console.log('False')
+//     i += 1
+//     j -= 1
+//   }
+//   return console.log('True')
+// }
 
 /* -------------------LIOJ------------------- */
 const readline = require('readline')
@@ -31,5 +32,6 @@ rl.on('close', () => {
 
 // 上面都不用管，只需要完成這個 function 就好，可以透過 lines[i] 拿取內容
 function solve(lines) {
-  Palindrome(lines[0])
+  console.log(lines[0] === lines[0].split('').reverse().join('') ? 'True' : 'False')
+  // Palindrome(lines[0])
 }

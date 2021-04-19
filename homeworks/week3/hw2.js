@@ -12,26 +12,24 @@ function storeInArray(i, digit) {
 }
 
 // 計算數字為幾位數
-function digits(i) {
-  let num = i
+function digits(n) {
   let digit = 1
-  while (Math.floor(num / 10)) {
+  while (Math.floor(n / 10)) {
     digit += 1
-    num /= 10
+    n /= 10
   }
   return digit
 }
 
-function narcissisticNum(min, max) {
-  for (let i = min; i <= max; i++) {
-    const digit = digits(i)
-    const arr = storeInArray(i, digit)
+function isNarcissisticNum(n) {
+  const digit = digits(n)
+  const arr = storeInArray(n, digit)
 
-    // 把每一位乘上 digit 並加總
-    const num = arr.reduce((sum, cur) => sum + Math.pow(cur, digit), 0)
+  // 把每一位乘上 digit 並加總
+  const num = arr.reduce((sum, cur) => sum + Math.pow(cur, digit), 0)
 
-    if (i === num) console.log(i)
-  }
+  if (n !== num) return false
+  return true
 }
 
 /* -------------------LIOJ------------------- */
@@ -58,5 +56,7 @@ function solve(lines) {
   const input = lines[0].split(' ')
   const min = parseInt(input[0], 10)
   const max = parseInt(input[1], 10)
-  narcissisticNum(min, max)
+  for (let i = min; i <= max; i++) {
+    if (isNarcissisticNum(i)) console.log(i)
+  }
 }
