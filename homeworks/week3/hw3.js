@@ -13,7 +13,7 @@ function prime(n) {
   console.log(isPrime ? 'Prime' : 'Composite')
 }
 
-// 以下為 LIOJ 所需
+/* -------------------LIOJ------------------- */
 const readline = require('readline')
 
 const rl = readline.createInterface({
