@@ -37,14 +37,6 @@ function BFS(maze, height, width) {
   }
 }
 
-// maze = [
-//   '.#.',
-//   '...',
-//   '#..'
-// ]
-
-// console.log(BFS(maze, 3, 3))
-
 /* -------------------LIOJ------------------- */
 const readline = require('readline')
 
@@ -66,7 +58,7 @@ rl.on('close', () => {
 
 // 上面都不用管，只需要完成這個 function 就好，可以透過 lines[i] 拿取內容
 function solve(lines) {
-  const maze = lines.slice(1)
+  const maze = lines.slice(1).map((el) => el.split(''))
   const size = lines[0].split(' ').map((el) => Number(el))
 
   console.log(BFS(maze, size[0], size[1]).length - 1)
