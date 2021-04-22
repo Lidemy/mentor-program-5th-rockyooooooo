@@ -7,81 +7,87 @@ const option2 = process.argv[4]
 
 switch (action) {
   case 'list':
-    request.get(
-      {
-        uri: '/books',
-        baseUrl,
-        qs: {
-          _limit: 20
-        }
-      },
-      (error, response, body) => {
-        const data = JSON.parse(body)
-        for (const book of data) console.log(book.id, book.name)
-      }
-    )
+    listBooks()
     break
 
   case 'read':
-    request.get(
-      {
-        uri: `/books/${Number(option)}`,
-        baseUrl
-      },
-      (error, response, body) => {
-        const data = JSON.parse(body)
-        console.log(data.name)
-      }
-    )
+    readBook()
     break
 
   case 'create':
-    request.post(
-      {
-        url: '/books',
-        baseUrl,
-        form: {
-          name: option
-        }
-      },
-      (error, response, body) => {
-        if (error) console.log('Error: ', error)
-        console.log('StatusCode: ', response.statusCode)
-        console.log('body: ', body)
-      }
-    )
+    createBook()
     break
 
   case 'delete':
-    request.delete(
-      {
-        uri: `/books/${Number(option)}`,
-        baseUrl
-      },
-      (error, response, body) => {
-        if (error) console.log('Error: ', error)
-        console.log('StatusCode: ', response.statusCode)
-      }
-    )
+    deleteBook()
     break
 
   case 'update':
-    request.patch(
-      {
-        url: `/books/${Number(option)}`,
-        baseUrl,
-        form: {
-          name: option2
-        }
-      },
-      (error, response, body) => {
-        if (error) console.log('Error: ', error)
-        console.log('StatusCode: ', response.statusCode)
-        console.log('body: ', body)
-      }
-    )
+    updateBook()
     break
 
   default:
     break
+}
+
+function listBooks() {
+  request.get(
+    {
+      uri: '/books',
+      baseUrl,
+      qs: {
+        _limit: 20
+      }
+    },
+    (error, response, body) => {
+      const data = JSON.parse(body)
+      for (const book of data) console.log(book.id, book.name)
+    }
+  )
+}
+
+function readBook() {
+  request.get(
+    {
+      uri: `/books/${Number(option)}`,
+      baseUrl
+    },
+    (error, response, body) => {
+      const data = JSON.parse(body)
+      console.log(data.name)
+    }
+  )
+}
+
+function createBook() {
+  request.post(
+    {
+      url: '/books',
+      baseUrl,
+      form: {
+        name: option
+      }
+    }
+  )
+}
+
+function deleteBook() {
+  request.delete(
+    {
+      uri: `/books/${Number(option)}`,
+      baseUrl
+    }
+  )
+}
+
+function updateBook() {
+  request.patch(
+    {
+      url: `/books/${Number(option)}`,
+      baseUrl,
+      form: {
+        name: option2
+      }
+    }
+  )
 }
