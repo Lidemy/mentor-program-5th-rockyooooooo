@@ -1,8 +1,17 @@
 const request = require('request')
 
-request('https://lidemy-book-store.herokuapp.com/books', (error, response, body) => {
-  const data = JSON.parse(body)
-  for (let i = 0; i < 10; i++) {
-    console.log(data[i].id, data[i].name)
+const baseUrl = 'https://lidemy-book-store.herokuapp.com'
+
+request.get(
+  {
+    uri: '/books',
+    baseUrl,
+    qs: {
+      _limit: 10
+    }
+  },
+  (error, response, body) => {
+    const data = JSON.parse(body)
+    for (const book of data) console.log(book.id, book.name)
   }
-})
+)
