@@ -21,7 +21,8 @@ API（Application Programming Interface），中文叫做**應用程式介面**�
 
 Base Url: `https://api.hojiaga.com`
 
-#### All Restaurants
+#### Get Restaurants
+Get all restaurants if no parameter is given.
 
 `GET https://api.hojiaga.com/restaurants`
 
@@ -30,14 +31,48 @@ Base Url: `https://api.hojiaga.com`
 |-----------|------|----------------------------------------------------------------------------------------|
 |`name`     |string|Search a restaurant by it's name. It can be the full name or partial name.              |
 |`meals`    |string|Valid values: `breakfast`, `brunch`, `lunch`, `dinner`                                  |
-|`Cuisine`  |string|Valid values: `taiwanese`, `chinese`, `cantonese`, `japanese`, `korean`, `international`|
+|`cuisine`  |string|Valid values: `taiwanese`, `chinese`, `cantonese`, `japanese`, `korean`, `international`|
 |`limit`    |number|Constrains the number of restaurants returned.                                          |
+
+##### example:
+###### request
+`https://api.hojiaga.com/restaurants?name=abao`
+###### response
+```
+[
+  {
+    "id": 156654,
+    "name": "abao",
+    "meals": "breakfast", "brunch",
+    "cuisine": "international"
+  },
+  {
+    "id": 156232,
+    "name": "abao's kitchen",
+    "meals": "lunch", "dinner",
+    "cuisine": "taiwanese", "japanese"
+  }
+]
+```
 
 -----
 
 #### Get a Restaurant
 
 `GET https://api.hojiaga.com/restaurants/:id`
+
+##### example:
+###### request
+`https://api.hojiaga.com/restaurants/156654`
+###### response
+```
+{
+  "id": 156654,
+  "name": "abao",
+  "meals": "breakfast", "brunch",
+  "cuisine": "international"
+}
+```
 
 -----
 
