@@ -14,7 +14,7 @@ function beTheBestThief(weights, values, weightLimit) {
         const thisResult = values[i] + bestResults[i][leftWeight] // 放了這個物品，要把這個物品的價值，加上放了之後，剩下的重量的最佳解，得出決定放這個物品會獲得的價值
         bestResults[i + 1][w] = Math.max(thisResult, bestResults[i][w]) // 放跟不放這個物品的價值相比，選價值高的
       } else {
-        bestResults[i + 1][w] = bestResults[i][w] // 物品超重，則沿用上一次的最佳解
+        bestResults[i + 1][w] = bestResults[i][w] // 目前檢查的物品重量（weight[i]）在這個重量（w）時放不進背包，則沿用上一次的最佳解
       }
     }
   }

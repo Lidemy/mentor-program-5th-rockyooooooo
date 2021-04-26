@@ -1,4 +1,4 @@
-function stars(num) {
+function printStars(num) {
   for (let i = 1; i <= num; i++) {
     for (let j = 1; j <= i; j++) {
       process.stdout.write('*') // 不換行印出 *
@@ -28,5 +28,5 @@ rl.on('close', () => {
 
 // 上面都不用管，只需要完成這個 function 就好，可以透過 lines[i] 拿取內容
 function solve(lines) {
-  stars(parseInt(lines[0], 10))
+  printStars(parseInt(lines[0], 10))
 }

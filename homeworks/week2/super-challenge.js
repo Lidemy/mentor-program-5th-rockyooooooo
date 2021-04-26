@@ -8,9 +8,9 @@ function halfAdder(A, B) {
 // 全加器，將兩個一位元二進位數相加，**並根據輸入的低位進位值（Cin）**，輸出一個和（S）及一個進位值（Cout）
 // 由兩個半加器及一個 or 運算組成
 function fullAdder(A, B, Cin) {
-  const S = halfAdder(Cin, halfAdder(A, B)[0])[0]
-  const Cout = halfAdder(A, B)[1] | halfAdder(Cin, halfAdder(A, B)[0])[1]
-  return [S, Cout]
+  const [S1, Cout1] = halfAdder(A, B)
+  const [S2, Cout2] = halfAdder(Cin, S1)
+  return [S2, Cout1 | Cout2]
 }
 
 // 用全加器做加法運算，因為只能對一位元二進位數做運算，所以每次都要把數字 & 1，再傳進全加器
@@ -22,8 +22,7 @@ function add(a, b) {
   let carryIn = 0
   while (a || b || carryIn) {
     // 只對最低有效位做運算，所以把 a, b 都 & 1
-    const sum = fullAdder(a & 1, b & 1, carryIn)[0]
-    const carryOut = fullAdder(a & 1, b & 1, carryIn)[1]
+    const [sum, carryOut] = fullAdder(a & 1, b & 1, carryIn)
     // 判斷輸出的 sum 為 0 或 1，若為 1，digit 的值即為放到 result 的正確位置
     // `digit | result` 可以把 sum 加到 result，並放到正確位置，且保留原本的 result 值
     result = (sum ? digit : 0) | result
