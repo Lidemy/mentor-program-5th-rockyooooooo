@@ -1,6 +1,13 @@
-function greedyThief(max, items) {
-  if (items.length <= max) return items.reduce((acc, cur) => Number(acc) + Number(cur))
-  return items.sort((a, b) => b - a).slice(0, max).reduce((acc, cur) => Number(acc) + Number(cur))
+function biggestPlatform(ladder) {
+  const platformCount = []
+  for (let i = 0; i < ladder.length; i++) {
+    const target = ladder[i]
+    const platform = ladder.filter((el) => el === target)
+    platformCount.push(platform.length)
+    i += platform.length
+  }
+
+  return Math.max(...platformCount)
 }
 
 /* -------------------LIOJ------------------- */
@@ -24,8 +31,8 @@ rl.on('close', () => {
 
 // 上面都不用管，只需要完成這個 function 就好，可以透過 lines[i] 拿取內容
 function solve(lines) {
-  const max = lines[0]
-  const items = lines.slice(2)
-  if (max === '0') return console.log(0)
-  return console.log(greedyThief(max, items))
+  const ladderNumber = lines[0]
+  if (ladderNumber === '0') return console.log(0)
+  const ladder = lines[1].split(' ')
+  console.log(biggestPlatform(ladder))
 }

@@ -10,7 +10,7 @@ function whoIsIncompatible(choices, choice) {
 function iWantPlayAGame(choices) {
   const numA = choices.filter((el) => el === 'A').length
   const numB = choices.filter((el) => el === 'B').length
-  if (numA === numB || numA === 0 || numB === 0) return 'PEACE'
+  if (numA === numB || numA === 0 || numB === 0) return ['PEACE']
   if (numA < numB) return whoIsIncompatible(choices, 'A')
   if (numA > numB) return whoIsIncompatible(choices, 'B')
 }
@@ -38,6 +38,5 @@ rl.on('close', () => {
 function solve(lines) {
   const choices = lines.slice(1)
   const result = iWantPlayAGame(choices)
-  if (typeof result === 'string') return console.log(result)
   for (const el of result) console.log(el)
 }
