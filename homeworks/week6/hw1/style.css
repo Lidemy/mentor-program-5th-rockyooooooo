@@ -1,0 +1,276 @@
+/* @font-face {
+  font-family: MicrosoftJhengHei;
+  src: local("微軟正黑體");
+  unicode-range: U+4E00-9FFF;
+}
+
+@font-face {
+  font-family: Questrial;
+  src: url(https://fonts.gstatic.com/s/questrial/v13/QdVUSTchPBm7nuUeVf70viFl.woff2) format('woff2');
+  unicode-range: U+00-024F;
+} */
+
+@import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
+
+:root {
+  --carnation: #ff7286;
+  --white: #ffffff;
+  --light-blue-grey: #d8eaef;
+  --lipstick: #e62a45;
+  --black: #292222;
+  --seafoam-blue: #5ec1b6;
+  --fern-green: #489846;
+  --light-grey-green: #a3dea2;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+h2::before {
+  content: '';
+  background-color: var(--light-grey-green);
+  display: inline-block;
+  position: relative;
+  right: 17px;
+  /* top: 7px; */
+  width: 15px;
+  height: 38px;
+  vertical-align: text-top;
+}
+
+/* Navbar style */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--white);
+  height: 84px;
+}
+
+.logo {
+  font-size: 36px;
+  color: var(--fern-green);
+  font-family: Questrial;
+}
+
+nav .logo {
+  position: relative;
+  left: 96px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  font-size: 18px;
+  font-family: MicrosoftJhengHei;
+  position: relative;
+  right: 121px;
+}
+
+nav ul a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 44px;
+  text-decoration: none;
+  color: #010101;
+}
+
+nav .active {
+  background-color: var(--carnation);
+  border-radius: 8px;
+  color: #fefefe;
+}
+/* Navbar style */
+
+/* Header style */
+header {
+  position: relative;
+}
+
+header img {
+  width: 100%;
+}
+
+header .overlay {
+  background-color: rgba(0, 0, 0, 0.3);
+  position: absolute;
+  width: 100%;
+  height: 99.5%;
+}
+
+header .restaurant-name {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%);
+  font-size: 60px;
+  color: var(--white);
+}
+/* Header style */
+
+/* Description style */
+.description {
+  text-align: center;
+}
+
+.description h2 {
+  font-size: 36px;
+  margin-top: 80px;
+  margin-bottom: 30px;
+}
+
+.description p {
+  font-size: 16px;
+  line-height: 36px;
+}
+
+.description button {
+  width: 300px;
+  height: 160px;
+  color: #3e613d;
+  border-radius: 10px;
+  font-size: 36px;
+  font-weight: bold;
+  border: none;
+  margin: 84px 0px 120px 10px;
+}
+
+.description .make-order {
+  background-color: #a8e8e1;
+}
+
+.description .search-orders {
+  background-color: #f9f9b5;
+}
+/* Description style */
+
+/* Menu style */
+.menu h2 {
+  text-align: center;
+  font-size: 36px;
+  font-family: Questrial;
+  margin-bottom: 36px;
+}
+
+.menu .food-pictures {
+  width: 100%;
+  display: flex;
+  margin-bottom: 82px;
+}
+
+.menu .food-pictures img {
+  width: 25%;
+}
+/* Menu style */
+
+/* Comments style */
+.comments {
+  text-align: center;
+  margin-bottom: 90px;
+}
+
+.comments h2 {
+  font-size: 36px;
+  margin-bottom: 98px;
+}
+
+.comments .comments-body {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.comments .comments-body .comment {
+  position: relative;
+  width: 30%;
+  height: 205px;
+  border-radius: 5px;
+  box-shadow: -1.4px -1.4px 4px 0 var(--light-blue-grey);
+  border: solid 1px #c7e5ec;
+  margin: 0;
+}
+
+.comments .comments-body .comment img {
+  position: absolute;
+  top: -52.5px;
+  left: 50%;
+  transform: translate(-50%);
+  border: solid 2px var(--light-blue-grey);
+  border-radius: 50%;
+}
+
+.comments .comments-body .comment .info {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translate(-50%);
+  width: 100%;
+  letter-spacing: 0.14px;
+}
+
+.comments .comments-body .comment .name {
+  margin-bottom: 23px;
+}
+
+/* Comments style */
+
+/* Location style */
+
+.location h2 {
+  font-size: 36px;
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.location div {
+  position: relative;
+  /* width: 1730px; */
+  width: 100%;
+  height: 455px;
+  background-color: black;
+  left: 50%;
+  transform: translate(-50%);
+  margin-bottom: 43px;
+}
+/* Location style */
+
+/* Footer style */
+footer .top {
+  background-color: #e8efee;
+  display: flex;
+  justify-content: space-between;
+  padding: 40px 106px;
+}
+
+footer .top p {
+  font-size: 14px;
+  color: #484848;
+  line-height: 35px;
+}
+
+footer .contact {
+  font-family: sans-serif;
+}
+
+footer .top .sites {
+  text-align: right;
+  font-family: Questrial;
+}
+
+footer .bottom {
+  background-color: #35564b;
+  text-align: center;
+  color: #fff;
+  height: 48px;
+}
+
+footer .bottom p {
+  line-height: 48px;
+  font-family: sans-serif;
+}
+/* Footer style */
