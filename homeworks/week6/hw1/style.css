@@ -1,276 +1,262 @@
-/* @font-face {
-  font-family: MicrosoftJhengHei;
-  src: local("微軟正黑體");
-  unicode-range: U+4E00-9FFF;
-}
-
-@font-face {
-  font-family: Questrial;
-  src: url(https://fonts.gstatic.com/s/questrial/v13/QdVUSTchPBm7nuUeVf70viFl.woff2) format('woff2');
-  unicode-range: U+00-024F;
-} */
-
 @import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
 
-:root {
-  --carnation: #ff7286;
-  --white: #ffffff;
-  --light-blue-grey: #d8eaef;
-  --lipstick: #e62a45;
-  --black: #292222;
-  --seafoam-blue: #5ec1b6;
-  --fern-green: #489846;
-  --light-grey-green: #a3dea2;
-}
-
+/* Global styling */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: Questrial, sans-serif;
 }
 
-h2::before {
-  content: '';
-  background-color: var(--light-grey-green);
-  display: inline-block;
-  position: relative;
-  right: 17px;
-  /* top: 7px; */
-  width: 15px;
-  height: 38px;
-  vertical-align: text-top;
+section {
+  text-align: center;
 }
 
-/* Navbar style */
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--white);
-  height: 84px;
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 15px;
 }
 
 .logo {
   font-size: 36px;
-  color: var(--fern-green);
-  font-family: Questrial;
+  color: #489846;
 }
 
-nav .logo {
-  position: relative;
-  left: 96px;
+.title {
+  display: inline-block;
+  font-size: 36px;
+  margin-bottom: 40px;
+  border-left: 15px solid #a3dea2;
+  padding-left: 17px;
+}
+/* Global styling */
+
+/* Header styling */
+header {
+  box-shadow: -1.4px -1.4px 6px 0 #97a2a0;
 }
 
-nav ul {
-  list-style: none;
+header .container {
   display: flex;
-  font-size: 18px;
-  font-family: MicrosoftJhengHei;
-  position: relative;
-  right: 121px;
+  justify-content: space-between;
 }
 
-nav ul a {
+header .logo {
+  margin: auto 0;
+  padding-left: 25px;
+}
+
+.header__nav {
   display: flex;
+  justify-content: space-around;
   align-items: center;
-  justify-content: center;
-  width: 120px;
-  height: 44px;
+}
+
+.header__nav a {
   text-decoration: none;
   color: #010101;
-}
-
-nav .active {
-  background-color: var(--carnation);
+  font-size: 18px;
+  padding: 14px 25px;
   border-radius: 8px;
+}
+
+.header__nav .active {
+  background: #ff7286;
   color: #fefefe;
+  margin: 20px 0;
 }
-/* Navbar style */
+/* Header styling */
 
-/* Header style */
-header {
+/* Banner styling */
+.banner {
   position: relative;
+  background: url("./2@tiny.png") left/cover no-repeat;
+  height: 580px;
+  margin-bottom: 80px;
 }
 
-header img {
-  width: 100%;
-}
-
-header .overlay {
-  background-color: rgba(0, 0, 0, 0.3);
+.banner::after {
+  content: "";
+  background: rgba(0, 0, 0, 0.3);
   position: absolute;
-  width: 100%;
-  height: 99.5%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
-header .restaurant-name {
+.banner h1 {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -70%);
+  transform: translate(-50%, -50%);
   font-size: 60px;
-  color: var(--white);
+  color: #fff;
+  z-index: 1;
 }
-/* Header style */
+/* Banner styling */
 
-/* Description style */
-.description {
-  text-align: center;
-}
-
-.description h2 {
-  font-size: 36px;
-  margin-top: 80px;
-  margin-bottom: 30px;
-}
-
+/* Description styling */
 .description p {
-  font-size: 16px;
-  line-height: 36px;
+  margin-bottom: 20px;
 }
 
-.description button {
+.buttons button {
   width: 300px;
   height: 160px;
-  color: #3e613d;
-  border-radius: 10px;
   font-size: 36px;
   font-weight: bold;
+  color: #3e613d;
+  margin: 80px 10px 120px;
   border: none;
-  margin: 84px 0px 120px 10px;
+  border-radius: 10px;
 }
 
-.description .make-order {
-  background-color: #a8e8e1;
+.btn-order {
+  background: #a8e8e1;
 }
 
-.description .search-orders {
-  background-color: #f9f9b5;
+.btn-search {
+  background: #f9f9b5;
 }
-/* Description style */
+/* Description styling */
 
-/* Menu style */
-.menu h2 {
-  text-align: center;
-  font-size: 36px;
-  font-family: Questrial;
-  margin-bottom: 36px;
-}
-
-.menu .food-pictures {
-  width: 100%;
+/* Menu styling */
+.menu__images {
   display: flex;
-  margin-bottom: 82px;
+  margin-bottom: 80px;
 }
 
-.menu .food-pictures img {
-  width: 25%;
+.menu__images img {
+  max-width: 25%;
 }
-/* Menu style */
+/* Menu styling */
 
-/* Comments style */
+/* Comments Styling */
 .comments {
-  text-align: center;
   margin-bottom: 90px;
 }
 
-.comments h2 {
-  font-size: 36px;
-  margin-bottom: 98px;
-}
-
-.comments .comments-body {
+.comments__body {
   display: flex;
-  justify-content: center;
   gap: 16px;
 }
 
-.comments .comments-body .comment {
+.comments__comment {
   position: relative;
-  width: 30%;
-  height: 205px;
+  border: 1px solid #c7e5ec;
   border-radius: 5px;
-  box-shadow: -1.4px -1.4px 4px 0 var(--light-blue-grey);
-  border: solid 1px #c7e5ec;
-  margin: 0;
-}
-
-.comments .comments-body .comment img {
-  position: absolute;
-  top: -52.5px;
-  left: 50%;
-  transform: translate(-50%);
-  border: solid 2px var(--light-blue-grey);
-  border-radius: 50%;
-}
-
-.comments .comments-body .comment .info {
-  position: absolute;
-  top: 60px;
-  left: 50%;
-  transform: translate(-50%);
-  width: 100%;
+  box-shadow: -1.4px -1.4px 4px 0 #d8eaef;
+  flex: 1;
+  min-height: 200px;
+  margin-top: 50px;
+  padding: 0 25px;
   letter-spacing: 0.14px;
+  line-height: 1.5em;
 }
 
-.comments .comments-body .comment .name {
-  margin-bottom: 23px;
+.comments__comment img {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border: solid 1px #c1c1c1;
+  border-radius: 50%;
+  background-color: #c1c1c1;
 }
 
-/* Comments style */
-
-/* Location style */
-
-.location h2 {
-  font-size: 36px;
-  text-align: center;
-  margin-bottom: 36px;
+.comments__comment div {
+  margin: 55px 0 50px;
 }
 
-.location div {
-  position: relative;
-  /* width: 1730px; */
-  width: 100%;
-  height: 455px;
-  background-color: black;
-  left: 50%;
-  transform: translate(-50%);
-  margin-bottom: 43px;
+.comments__comment p:last-child {
+  margin-top: 10px;
 }
-/* Location style */
+/* Comments Styling */
 
-/* Footer style */
-footer .top {
+/* Location styling */
+.location {
+  margin-bottom: 40px;
+}
+
+.location iframe{
+  display: block;
+}
+/* Location styling */
+
+/* Footer styling */
+.footer__top {
   background-color: #e8efee;
+  padding: 40px 0;
+  color: #484848;
+}
+
+.footer__top .container {
   display: flex;
   justify-content: space-between;
-  padding: 40px 106px;
 }
 
-footer .top p {
-  font-size: 14px;
-  color: #484848;
-  line-height: 35px;
+.footer__info {
+  line-height: 2em;
 }
 
-footer .contact {
-  font-family: sans-serif;
-}
-
-footer .top .sites {
+.footer__sites {
   text-align: right;
-  font-family: Questrial;
 }
 
-footer .bottom {
-  background-color: #35564b;
-  text-align: center;
+.footer__bottom {
+  background: #35564b;
   color: #fff;
-  height: 48px;
+  text-align: center;
+  padding: 15px 0;
 }
+/* Footer styling */
 
-footer .bottom p {
-  line-height: 48px;
-  font-family: sans-serif;
+/* RWD */
+@media(max-width: 768px) {
+  header .container {
+    flex-direction: column;
+  }
+
+  header .logo {
+    margin: 16px auto 0;
+  }
+
+  .buttons {
+    margin-bottom: 80px;
+  }
+
+  .buttons button {
+    width: 200px;
+    height: 120px;
+    font-size: 24px;
+    margin: 15px;
+  }
+
+  .menu__images {
+    flex-direction: column;
+  }
+
+  .menu__images img {
+    min-width: 100%;
+  }
+
+  .comments__body {
+    flex-direction: column;
+  }
+
+  .comments__comment {
+    min-height: 100px;
+    max-width: 70vw;
+    margin: 50px auto 0;
+  }
+
+  .footer__top .container {
+    flex-direction: column-reverse;
+  }
+
+  .footer__sites {
+    text-align: center;
+    margin-bottom: 40px;
+  }
 }
-/* Footer style */
+/* RWD */
