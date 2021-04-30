@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lazy Form</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>新拖延運動報名表單</h1>
+    <div class="info">
+      <p>活動日期：2020/12/10 ~ 2020/12/11</p>
+      <p>活動地點：台北市大安區新生南路二段1號</p>
+    </div>
+    <span>*必填</span>
+    <form action="">
+      <div class="input-group">
+        <label class="form-label" for="name">暱稱 <span>*</span></label>
+        <input type="text" id="name" placeholder="您的回答">
+      </div>
+      <div class="input-group">
+        <label class="form-label" for="email">電子郵件 <span>*</span></label>
+        <input type="email" id="email" placeholder="您的電子郵件">
+      </div>
+      <div class="input-group">
+        <label class="form-label" for="phone-number">手機號碼 <span>*</span></label>
+        <input type="text" id="phone-number" placeholder="您的手機號碼">
+      </div>
+      <div class="input-group">
+        <p class="form-label">報名類型 <span>*</span></p>
+        <div>
+          <input type="radio" id="imagination" name="type" value="imagination">
+          <label for="imagination">躺在床上用想像力實作</label>
+        </div>
+        <div>
+          <input type="radio" id="copycat" name="type" value="copycat">
+          <label for="copycat"> 趴在地上滑手機找現成的</label>
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="form-label" for="know-from">怎麼知道這個活動的？ <span>*</span></label>
+        <input type="text" id="know-from" placeholder="您的回答">
+      </div>
+      <div class="input-group">
+        <label class="form-label" for="suggestion">
+          其他
+          <p>對活動的一些建議</p>
+        </label>
+        <input type="text" id="suggestion" placeholder="您的回答">
+      </div>
+      <button type="submit">提交</button>
+      <p>請勿透過表單送出您的密碼。</p>
+    </form>
+  </main>
+
+  <footer><p>© 2020 © Copyright. All rights Reserved.</p></footer>
+</body>
+</html>
