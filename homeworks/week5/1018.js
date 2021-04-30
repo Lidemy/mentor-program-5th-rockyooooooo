@@ -1,12 +1,15 @@
 function biggestPlatform(ladder) {
-  const platformCount = []
+  const platformCount = [] // 用來儲存每個數字的個數（長度）
   for (let i = 0; i < ladder.length; i++) {
     const target = ladder[i]
+    // 過濾跟當前數字不一樣的值，存成陣列，此陣列長度就是這個平台的長度
     const platform = ladder.filter((el) => el === target)
     platformCount.push(platform.length)
+    // 把 i 跳過這些數字，避免重複計算
     i += platform.length
   }
 
+  // 回傳最長的平台
   return Math.max(...platformCount)
 }
 
