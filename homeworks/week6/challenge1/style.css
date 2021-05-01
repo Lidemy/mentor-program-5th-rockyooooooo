@@ -1,0 +1,188 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Verdana, Geneva, sans-serif;
+}
+
+header {
+  background-color: #f60;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+p {
+  cursor: default;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+/* Header styling */
+header a:hover {
+  text-decoration: none;
+}
+
+.header__logo {
+  margin-left: 2px;
+  border: 1px solid white;
+  flex: 0 0 50px;
+}
+
+.header__main {
+  margin: 6px;
+  flex: 1 1 100%;
+}
+
+.header__title {
+  font-size: 16px;
+}
+
+.header__nav {
+  font-size: 12px;
+}
+
+.header__login {
+  font-size: 12px;
+  flex: 0 0 40px;
+}
+/* Header styling */
+
+/* Main styling */
+main {
+  background: #f7f7ef;
+  padding: 8px 4px 8px 0;
+}
+
+article {
+  display: flex;
+  padding: 0 8px 0 0;
+}
+
+article h2 {
+  display: inline;
+  font-size: 14px;
+  font-weight: normal;
+  margin-right: 4px;
+  color: black;
+}
+
+article h2 a {
+  font-size: inherit;
+}
+
+article h2,
+article p {
+  margin: 4px 2px;
+}
+
+article span,
+article p,
+article a {
+  font-size: 8px;
+}
+
+article span,
+article span a,
+article p,
+article p a,
+.article__number {
+  color: #828282;
+}
+
+article span:hover,
+article p a:hover {
+  text-decoration: underline;
+}
+
+.article__number {
+  font-size: 14px;
+  margin: 1px 0;
+  text-align: right;
+  min-width: 24px;
+}
+
+.article__upvote {
+  min-width: 14px;
+  height: 14px;
+  margin: 0 2px;
+}
+
+.article__upvote img {
+  width: 100%;
+  height: 100%;
+}
+
+.more {
+  font-size: 14px;
+  color: black;
+  margin: 10px 0 10px 44px;
+}
+/* Main styling */
+
+/* Footer styling */
+footer {
+  background: #f7f7ef;
+  text-align: center;
+  font-size: 8px;
+  border-top: 2px solid #f60;
+}
+
+footer > * {
+  margin: 14px 24px;
+}
+
+.footer__search {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.footer__label {
+  color: #828282;
+}
+
+.footer__search-bar {
+  height: 1.5rem;
+  font-size: 10px;
+  padding: 2px;
+}
+/* Footer styling */
+
+/* RWD */
+@media (min-width: 750px) {
+  .container {
+    width: 85%;
+    min-width: 800px;
+    margin: 10px auto;
+  }
+
+  .header__main {
+    display: flex;
+    align-items: center;
+  }
+
+  .header__title {
+    margin-right: 10px;
+    font-size: 14px;
+  }
+
+  footer {
+    padding-bottom: 4px;
+  }
+
+  .footer__search {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .footer__search-bar {
+    height: 20px;
+    width: 130px;
+    margin-left: 8px;
+  }
+}
+/* RWD */
