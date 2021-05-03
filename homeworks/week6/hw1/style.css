@@ -57,14 +57,21 @@ header .logo {
   text-decoration: none;
   color: #010101;
   font-size: 18px;
+  text-align: center;
   padding: 14px 25px;
   border-radius: 8px;
+  margin: 20px 5px;
+  transition: background 500ms ease, color 500ms ease;
+}
+
+.header__nav a:hover {
+  background: #ff7286;
+  color: #fefefe;
 }
 
 .header__nav .active {
   background: #ff7286;
   color: #fefefe;
-  margin: 20px 0;
 }
 /* Header styling */
 
