@@ -1,0 +1,47 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  /* border: 1px solid gold; */
+}
+
+.container {
+  width: 700px;
+  margin: 5rem auto;
+}
+
+.todo__header {
+  text-align: center;
+}
+
+.todo__title {
+  font-size: 4rem;
+}
+
+.todo__input {
+  width: 80%;
+  height: 2rem;
+  padding: 0.5rem;
+  font-size: 1.25rem
+}
+
+.list__container {
+  list-style: none;
+}
+
+.list__item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.25rem;
+  margin: auto;
+  padding: 0.75rem;
+  width: 80%;
+}
+
+.finished {
+  color: rgba(0, 0, 0, 0.3)
+}
+
+.finished p {
+  text-decoration: line-through;
+}
