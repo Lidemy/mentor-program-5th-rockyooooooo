@@ -17,7 +17,7 @@ function addTodo(e) {
   input.value = ''
 }
 
-function removeTodo(e) {
+function removeTodoFromLeftClick(e) {
   e.preventDefault()
 
   if (e.target.classList.contains('list__item')) {
@@ -25,6 +25,12 @@ function removeTodo(e) {
   }
 
   if (e.target.parentNode.classList.contains('list__item')) {
+    e.target.parentNode.parentNode.removeChild(e.target.parentNode)
+  }
+}
+
+function removeTodoFromCloseBtn(e) {
+  if (e.target.classList.contains('close')) {
     e.target.parentNode.parentNode.removeChild(e.target.parentNode)
   }
 }
@@ -40,5 +46,6 @@ function toggleTodo(e) {
 }
 
 form.addEventListener('submit', addTodo)
-listContainer.addEventListener('contextmenu', removeTodo)
 listContainer.addEventListener('click', toggleTodo)
+listContainer.addEventListener('contextmenu', removeTodoFromLeftClick)
+listContainer.addEventListener('click', removeTodoFromCloseBtn)
