@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Todo List</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,11 +20,21 @@
     <ul class="list__container">
       <li class="list__item">
         <p>gogogo</p>
-        <span class="material-icons close">close</span>
+        <input class="list_text hide" type="text" value="gogogo">
+        <div class="list__btns">
+          <span class="material-icons-outlined finish hide">check_circle_outline</span>
+          <span class="material-icons-outlined edit">edit</span>
+          <span class="material-icons close">close</span>
+        </div>
       </li>
       <li class="list__item finished">
         <p>nonono</p>
-        <span class="material-icons close">close</span>
+        <input class="list_text hide" type="text" value="nonono">
+        <div class="list__btns">
+          <span class="material-icons-outlined finish hide">check_circle_outline</span>
+          <span class="material-icons-outlined edit">edit</span>
+          <span class="material-icons close">close</span>
+        </div>
       </li>
     </ul>
   </div>
