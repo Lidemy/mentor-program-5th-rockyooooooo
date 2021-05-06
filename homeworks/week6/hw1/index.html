@@ -6,17 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Just a bite!</title>
   <link rel="stylesheet" href="./style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
 <body>
   <header>
     <div class="container">
-      <div class="logo">Just A Bite!</div>
+      <div class="logo"><a href="#">Just A Bite!</a></div>
       <nav class="header__nav">
         <a href="#" class="active">抽個大獎</a>
         <a href="#">我要點餐</a>
         <a href="#">查詢訂單</a>
         <a href="#">常見問題</a>
       </nav>
+      <span class="material-icons-outlined hamburger hide">menu</span>
     </div>
   </header>
 
@@ -42,10 +44,10 @@
   <section class="menu">
       <h2 class="title">Menu 搶先看</h2>
       <div class="menu__images">
-        <img src="./f-001.png" alt="">
-        <img src="./f-002.png" alt="">
-        <img src="./f-003.png" alt="">
-        <img src="./f-004.png" alt="">
+        <div><img src="./f-001.png" alt=""></div>
+        <div><img src="./f-002.png" alt=""></div>
+        <div><img src="./f-003.png" alt=""></div>
+        <div><img src="./f-004.png" alt=""></div>
       </div>
   </section>
 
@@ -95,7 +97,7 @@
           <p>email：service@justabite.com.tw</p>
         </div>
         <div class="footer__sites">
-          <div class="logo">Just A Bite!</div>
+          <div class="logo"><a href="#">Just A Bite!</a></div>
           <p>Facebook / Instagram / Youtube</p>
         </div>
       </div>
@@ -104,5 +106,14 @@
       <p>Copyright © 2020 Just A Bite All Rights Reserved. 咬一口股份有限公司版權所有</p>
     </div>
   </footer>
+  
+  <script>
+    const hamburger = document.querySelector('.hamburger')
+    const nav = document.querySelector('.header__nav')
+
+    hamburger.addEventListener('click', () => {
+      nav.classList.toggle('show')
+    })
+  </script>
 </body>
 </html>

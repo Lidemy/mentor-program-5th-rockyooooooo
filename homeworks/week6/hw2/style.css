@@ -5,7 +5,12 @@
   font-family: sans-serif;
 }
 
+body {
+  background: rgba(0, 0, 0, 0.15);
+}
+
 main {
+  background: white;
   box-shadow: 1.8px 2.4px 5px 0 rgba(0, 0, 0, 0.3);
   width: 645px;
   margin: 10vh auto;
