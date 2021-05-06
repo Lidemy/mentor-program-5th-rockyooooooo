@@ -45,7 +45,7 @@ function printInputs() {
   const inputValue = {}
   for (const input of inputs) {
     if (input.type === 'radio' && !input.checked) continue
-    inputValue[input.name] = input.value
+    inputValue[input.name] = input.type === 'radio' ? input.nextElementSibling.innerText : input.value
   }
 
   return `

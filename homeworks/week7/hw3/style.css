@@ -88,6 +88,19 @@
   background: #fefffc;
 }
 
+.list__content {
+  overflow: auto;
+  flex: 9 1;
+}
+
+.list__text {
+  flex: 9 1;
+}
+
+.list__btns {
+  flex: 1 0 0.5rem;
+}
+
 .finished {
   color: rgba(0, 0, 0, 0.3);
 }
