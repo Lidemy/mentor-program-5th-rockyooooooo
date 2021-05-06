@@ -28,7 +28,7 @@ p {
 }
 
 span,
-.required-msg {
+.error-msg {
   color: #e74149;
 }
 
