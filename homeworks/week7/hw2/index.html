@@ -135,9 +135,21 @@
       nav.classList.toggle('show')
     })
 
+    function hideAnswer(element) {
+      element.style.maxHeight = '0px'
+      element.classList.remove('show')
+    }
+
+    function showAnswer(element) {
+      const height = element.scrollHeight + 'px'
+      element.style.maxHeight = height
+      element.classList.add('show')
+    }
+
     faq.addEventListener('click', (e) => {
       if (e.target.classList.contains('FAQ__question')) {
-        e.target.nextSibling.nextSibling.classList.toggle('show')
+        const ansEl = e.target.nextElementSibling
+        ansEl.classList.contains('show') ? hideAnswer(ansEl) : showAnswer(ansEl)
       }
     })
   </script>
