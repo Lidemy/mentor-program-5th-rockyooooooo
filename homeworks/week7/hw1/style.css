@@ -32,6 +32,10 @@ span,
   color: #e74149;
 }
 
+.error-msg {
+  position: absolute;
+}
+
 input {
   margin-top: 20px;
   border: 1px solid #d0d0d0;

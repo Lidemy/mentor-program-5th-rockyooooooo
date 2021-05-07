@@ -1,47 +1,51 @@
 const form = document.querySelector('form')
-const inputs = document.querySelectorAll('input')
 const phoneNumber = document.querySelector('#phone-number')
-const imagination = document.querySelector('#imagination')
-const copycat = document.querySelector('#copycat')
 
 function reset() {
   const errorEls = document.querySelectorAll('.error-msg')
   for (const el of errorEls) el.remove()
 }
 
-function errorMsg(e, input, msg) {
-  e.preventDefault()
-
+function errorMsg(el, msg) {
   const text = document.createElement('p')
   text.innerText = msg
   text.classList.add('error-msg')
-  input.parentNode.appendChild(text)
+  el.appendChild(text)
 }
 
-function validation(e) {
-  let isValid = true
+function isValidForm() {
+  const requiredEls = document.querySelectorAll('.required') // 對必填項目做驗證
+  let hasError = false
 
-  if (!imagination.checked && !copycat.checked) {
-    errorMsg(e, copycat, '此項為必填')
-    isValid = false
-  }
+  for (const el of requiredEls) {
+    const input = el.querySelector('input')
+    const radios = el.querySelectorAll('input[type=radio]')
+    let isValid = true
 
-  for (const element of inputs) {
-    if (element.value === '' && element.id !== 'suggestion') {
-      errorMsg(e, element, '此項為必填')
+    // radio input 一定有 value，所以這邊不用排除 radio input
+    if (!input.value) { // 因為 input-value 會是字串，就算使用者輸入 0 也會是 '0'，所以不用寫成 input.value === ''
       isValid = false
+    } else if (radios.length) {
+      isValid = [...radios].some((radio) => radio.checked)
+    }
+
+    if (!isValid) {
+      errorMsg(el, '此項為必填')
+      hasError = true
     }
   }
 
+  // 對手機號碼做額外驗證，只接受數字
   if (/\D/.test(phoneNumber.value)) {
-    errorMsg(e, phoneNumber, '手機號碼只接受數字')
-    isValid = false
+    errorMsg(phoneNumber.parentNode, '手機號碼只接受數字')
+    hasError = true
   }
 
-  return isValid
+  return hasError
 }
 
 function printInputs() {
+  const inputs = document.querySelectorAll('input')
   const inputValue = {}
   for (const input of inputs) {
     if (input.type === 'radio' && !input.checked) continue
@@ -60,7 +64,5 @@ function printInputs() {
 
 form.addEventListener('submit', (e) => {
   reset()
-  if (!validation(e)) return
-
-  alert(printInputs())
+  isValidForm() ? e.preventDefault() : alert(printInputs())
 })
