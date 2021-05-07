@@ -38,7 +38,7 @@
   box-shadow: 3px 3px 5px 1px rgba(0, 0, 0, 0.2);
 }
 
- .todo__header::before {
+.todo__header::before {
   left: 1vw;
   top: 0;
 }
@@ -93,7 +93,7 @@
   overflow-wrap: anywhere;
 }
 
-.list__text {
+.list__edit-content {
   flex: 9 1;
   font-size: 1.25rem;
 }
@@ -102,11 +102,11 @@
   flex: 1 0 0.5rem;
 }
 
-.finished {
+.done {
   color: rgba(0, 0, 0, 0.3);
 }
 
-.finished p {
+.done p {
   text-decoration: line-through;
 }
 

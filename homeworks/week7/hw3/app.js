@@ -2,6 +2,15 @@ const form = document.querySelector('.todo__form')
 const input = document.querySelector('.todo__input')
 const listContainer = document.querySelector('.list__container')
 
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
 function addTodo(e) {
   e.preventDefault()
   if (!input.value) return
@@ -10,11 +19,11 @@ function addTodo(e) {
   const li = document.createElement('li')
   li.innerHTML = `
     <p class="list__content">${value}</p>
-    <input class="list__text hide" type="text" value="${value}">
+    <input class="list__edit-content hide" type="text" value="${value}">
     <div class="list__btns">
-      <span class="material-icons-outlined finish hide">check_circle_outline</span>
+      <span class="material-icons-outlined finish-edit hide">check_circle_outline</span>
       <span class="material-icons-outlined edit">edit</span>
-      <span class="material-icons close">close</span>
+      <span class="material-icons delete">close</span>
     </div>
     `
   li.classList.add('list__item')
@@ -26,70 +35,42 @@ function addTodo(e) {
 function removeTodoFromLeftClick(e) {
   e.preventDefault()
 
-  if (e.target.classList.contains('list__item')) {
-    listContainer.removeChild(e.target)
-  }
-
-  if (e.target.parentNode.classList.contains('list__item')) {
-    e.target.parentNode.parentNode.removeChild(e.target.parentNode)
+  if (e.target.classList.contains('list__item') || e.target.classList.contains('list__content')) {
+    const task = e.target.closest('.list__item')
+    listContainer.removeChild(task)
   }
 }
 
-function removeTodoFromCloseBtn(e) {
-  if (e.target.classList.contains('close')) {
-    e.target.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode)
+function removeTodoFromDeleteBtn(e) {
+  if (e.target.classList.contains('delete')) {
+    const task = e.target.closest('.list__item')
+    listContainer.removeChild(task)
   }
 }
 
 function toggleTodo(e) {
-  if (e.target.classList.contains('list__item') && !e.target.classList.contains('editMode')) {
-    e.target.classList.toggle('finished')
-  }
-
-  if (e.target.parentNode.classList.contains('list__item') && !e.target.parentNode.classList.contains('editMode')) {
-    e.target.parentNode.classList.toggle('finished')
+  if (e.target.classList.contains('list__item') || e.target.classList.contains('list__content')) {
+    const task = e.target.closest('.list__item')
+    if (!task.classList.contains('edit-mode')) task.classList.toggle('done')
   }
 }
 
-function editMode(e) {
-  if (e.target.classList.contains('edit')) {
-    e.target.parentNode.parentNode.classList.toggle('editMode')
-    e.target.parentNode.previousSibling.previousSibling.previousSibling.previousSibling.classList.toggle('hide')
-    e.target.parentNode.previousSibling.previousSibling.classList.toggle('hide')
-    e.target.previousSibling.previousSibling.classList.toggle('hide')
-    e.target.classList.toggle('hide')
+function toggleEditMode(e) {
+  if (e.target.classList.contains('edit') || e.target.classList.contains('finish-edit')) {
+    const task = e.target.closest('.list__item')
+    const listContent = task.querySelector('.list__content')
+    const listEditContent = task.querySelector('.list__edit-content')
+    const finishBtn = task.querySelector('.finish-edit')
+    const editBtn = task.querySelector('.edit')
+    task.classList.toggle('edit-mode')
+    for (const elem of [listContent, listEditContent, finishBtn, editBtn]) elem.classList.toggle('hide')
+
+    if (e.target.classList.contains('finish-edit')) listContent.innerText = listEditContent.value
   }
-}
-
-function finishedEdit(e) {
-  if (e.target.classList.contains('finish')) {
-    const listEl = e.target.parentNode.parentNode
-    const finishBtn = e.target
-    const editBtn = e.target.nextSibling.nextSibling
-    const inputEl = e.target.parentNode.previousSibling.previousSibling
-    const pEl = e.target.parentNode.previousSibling.previousSibling.previousSibling.previousSibling
-    listEl.classList.toggle('editMode')
-    pEl.classList.toggle('hide')
-    inputEl.classList.toggle('hide')
-    editBtn.classList.toggle('hide')
-    finishBtn.classList.toggle('hide')
-
-    pEl.innerText = inputEl.value
-  }
-}
-
-function escapeHtml(unsafe) {
-  return unsafe
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
 }
 
 form.addEventListener('submit', addTodo)
-listContainer.addEventListener('click', toggleTodo)
 listContainer.addEventListener('contextmenu', removeTodoFromLeftClick)
-listContainer.addEventListener('click', removeTodoFromCloseBtn)
-listContainer.addEventListener('click', editMode)
-listContainer.addEventListener('click', finishedEdit)
+listContainer.addEventListener('click', removeTodoFromDeleteBtn)
+listContainer.addEventListener('click', toggleTodo)
+listContainer.addEventListener('click', toggleEditMode)
