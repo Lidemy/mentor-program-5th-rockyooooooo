@@ -89,12 +89,13 @@
 }
 
 .list__content {
-  overflow: auto;
   flex: 9 1;
+  overflow-wrap: anywhere;
 }
 
 .list__text {
   flex: 9 1;
+  font-size: 1.25rem;
 }
 
 .list__btns {
