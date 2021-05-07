@@ -80,6 +80,8 @@ header .logo {
 
 .hamburger {
   display: none !important;
+  cursor: pointer;
+  user-select: none;
 }
 /* Header styling */
 
