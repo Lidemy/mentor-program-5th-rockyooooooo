@@ -13,6 +13,19 @@ function errorMsg(el, msg) {
   el.appendChild(text)
 }
 
+function autoFocus() {
+  const focus = document.querySelector('.error-msg')
+  if (focus) {
+    focus.previousElementSibling.focus()
+    const height = focus.parentElement.offsetTop
+
+    window.scrollTo({
+      top: height,
+      behavior: 'smooth'
+    })
+  }
+}
+
 function isValidForm() {
   const requiredEls = document.querySelectorAll('.required') // 對必填項目做驗證
   let hasError = false
@@ -41,7 +54,9 @@ function isValidForm() {
     hasError = true
   }
 
-  return hasError
+  autoFocus()
+
+  return !hasError
 }
 
 function printInputs() {
@@ -64,5 +79,6 @@ function printInputs() {
 
 form.addEventListener('submit', (e) => {
   reset()
-  isValidForm() ? e.preventDefault() : alert(printInputs())
+  isValidForm() ? alert(printInputs()) : e.preventDefault()
+  e.preventDefault()
 })
