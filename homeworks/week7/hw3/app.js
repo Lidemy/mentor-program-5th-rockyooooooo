@@ -6,10 +6,11 @@ function addTodo(e) {
   e.preventDefault()
   if (!input.value) return
 
+  const value = escapeHtml(input.value)
   const li = document.createElement('li')
   li.innerHTML = `
-    <p class="list__content">${input.value}</p>
-    <input class="list__text hide" type="text" value="${input.value}">
+    <p class="list__content">${value}</p>
+    <input class="list__text hide" type="text" value="${value}">
     <div class="list__btns">
       <span class="material-icons-outlined finish hide">check_circle_outline</span>
       <span class="material-icons-outlined edit">edit</span>
@@ -75,6 +76,15 @@ function finishedEdit(e) {
 
     pEl.innerText = inputEl.value
   }
+}
+
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
 }
 
 form.addEventListener('submit', addTodo)
