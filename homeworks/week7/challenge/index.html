@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carousel</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .carousel__window {
+      position: relative;
+      width: 80vw;
+      height: 80vh;
+      overflow: hidden;
+      border: 1px solid black;
+    }
+
+    .carousel__container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      margin: 0 auto;
+      transform: translate(-100%)
+    }
+
+    .carousel__item {
+      min-width: 100%;
+      height: 100%;
+      transition: all 500ms ease;
+    }
+
+    .item1 {
+      background: red;
+    }
+    .item2 {
+      background: green;
+    }
+    .item3 {
+      background: blue;
+    }
+
+    .active {
+      z-index: 10;
+    }
+
+    .hide {
+      z-index: -10;
+    }
+
+    .prev-container,
+    .next-container {
+      position: absolute;
+      z-index: 100;
+      top: 0;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0 1rem;
+      cursor: pointer;
+    }
+
+    .prev-container {
+      left: 0;
+    }
+
+    .prev-container:hover {
+      box-shadow: inset 100px 0px 30px -100px rgba(0, 0, 0, 0.5);
+    }
+
+    .next-container {
+      right: 0;
+    }
+
+    .next-container:hover {
+      box-shadow: inset -100px 0px 30px -100px rgba(0, 0, 0, 0.5);
+    }
+
+    .material-icons-outlined {
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="carousel__window">
+    <div class="prev-container"><span class="material-icons-outlined prev">chevron_left</span></div>
+    <div class="carousel__container">
+      <div class="carousel__item item1"></div>
+      <div class="carousel__item item2 active"></div>
+      <div class="carousel__item item3 hide"></div>
+    </div>
+    <div class="next-container"><span class="material-icons-outlined next">chevron_right</span></div>
+  </div>
+
+  <script>
+    const carouselWindow = document.querySelector('.carousel__window')
+    const carouselContainer = document.querySelector('.carousel__container')
+    let [move1, move2, move3] = [0, 0, 0]
+    let isMoving = false
+
+    function moveToLastPosition (move, node) {
+      move += 200
+      node.classList.add('hide')
+      return move
+    }
+
+    function moveToFisrtPosition (move, node) {
+      move -= 200
+      node.classList.add('hide')
+      return move
+    }
+
+    function showOnWindow (node) {
+      node.classList.add('active')
+      node.classList.remove('hide')
+    }
+
+    function carousel(direction) {
+      // isMoving 設為 true，禁止轉場效果再次被觸發
+      isMoving = true
+
+      // 開始轉場
+      if (direction === 'slideToLeft') {
+        move1 === 0 ? move1 = moveToLastPosition(move1, carouselContainer.children[0]) : move1 -= 100
+        carouselContainer.children[0].style.transform = `translate(${move1}%)`
+        move1 === 100 ? showOnWindow(carouselContainer.children[0]) : carouselContainer.children[0].classList.remove('active')
+        move2 === -100 ? move2 = moveToLastPosition(move2, carouselContainer.children[1]) : move2 -= 100
+        carouselContainer.children[1].style.transform = `translate(${move2}%)`
+        move2 === 0 ? showOnWindow(carouselContainer.children[1]) : carouselContainer.children[1].classList.remove('active')
+        move3 === -200 ? move3 = moveToLastPosition(move3, carouselContainer.children[2]) : move3 -= 100
+        carouselContainer.children[2].style.transform = `translate(${move3}%)`
+        move3 === -100 ? showOnWindow(carouselContainer.children[2]) : carouselContainer.children[2].classList.remove('active')
+      } else if (direction === 'slideToRight') {
+        move1 === 200 ? move1 = moveToFisrtPosition(move1, carouselContainer.children[0]) : move1 += 100
+        carouselContainer.children[0].style.transform = `translate(${move1}%)`
+        move1 === 100 ? showOnWindow(carouselContainer.children[0]) : carouselContainer.children[0].classList.remove('active')
+        move2 === 100 ? move2 = moveToFisrtPosition(move2, carouselContainer.children[1]) : move2 += 100
+        carouselContainer.children[1].style.transform = `translate(${move2}%)`
+        move2 === 0 ? showOnWindow(carouselContainer.children[1]) : carouselContainer.children[1].classList.remove('active')
+        move3 === 0 ? move3 = moveToFisrtPosition(move3, carouselContainer.children[2]) : move3 += 100
+        carouselContainer.children[2].style.transform = `translate(${move3}%)`
+        move3 === -100 ? showOnWindow(carouselContainer.children[2]) : carouselContainer.children[2].classList.remove('active')
+      }
+
+      // 500ms 後把 isMoving 設回 false，讓轉場效果可以再次被觸發
+      setTimeout(() => isMoving = false, 500)
+    }
+
+    carouselWindow.addEventListener('click', (e) => {
+      // 目前沒有在轉場才執行轉場效果，避免轉場中重複點擊
+      if (!isMoving) {
+        if (e.target.classList.contains('prev-container') || e.target.classList.contains('prev')) carousel('slideToLeft')
+        if (e.target.classList.contains('next-container') || e.target.classList.contains('next')) carousel('slideToRight')
+      }
+    })
+  </script>
+</body>
+</html>
