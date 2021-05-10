@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo List</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header class="todo__header">
+      <h1 class="todo__title">Todo List</h1>
+      <form class="todo__form">
+        <input class="todo__input" type="text" placeholder="Add todo...">
+      </form>
+    </header>
+    <ul class="list__container">
+      <li class="list__item">
+        <p class="list__content">gogogo</p>
+        <input class="list__edit-content hide" type="text" value="gogogo">
+        <div class="list__btns">
+          <span class="material-icons-outlined finish-edit hide">check_circle_outline</span>
+          <span class="material-icons-outlined edit">edit</span>
+          <span class="material-icons delete">close</span>
+        </div>
+      </li>
+      <li class="list__item done">
+        <p class="list__content">nonono</p>
+        <input class="list__edit-content hide" type="text" value="nonono">
+        <div class="list__btns">
+          <span class="material-icons-outlined finish-edit hide">check_circle_outline</span>
+          <span class="material-icons-outlined edit">edit</span>
+          <span class="material-icons delete">close</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

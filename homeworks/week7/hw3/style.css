@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Rubik', sans-serif;;
+}
+
+.container {
+  background: #fffce6;
+  max-width: 700px;
+  width: 80vw;
+  margin: 5rem auto;
+  padding: 2vw;
+  color: #199aa3;
+  box-shadow: 3px 3px 5px 1px rgba(0, 0, 0, 0.4);
+}
+
+.todo__header {
+  position: relative;
+  text-align: center;
+}
+
+.todo__header > * {
+  margin: 2vw 2rem;
+}
+
+.todo__header::before,
+.todo__header::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  background: #6ec7cc;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  box-shadow: 3px 3px 5px 1px rgba(0, 0, 0, 0.2);
+}
+
+.todo__header::before {
+  left: 1vw;
+  top: 0;
+}
+
+.todo__header::after {
+  top: 0;
+  right: 0;
+} 
+
+.todo__title {
+  font-size: 4rem;
+  cursor: default;
+}
+
+.todo__input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: inherit;
+  width: 80%;
+  height: 2rem;
+  padding: 0.5rem;
+  font-size: 1.25rem;
+  border-bottom: 2px solid transparent;
+  transition: border 300ms ease;
+}
+
+.todo__input:focus {
+  border-bottom: 2px solid #199aa3;
+}
+
+.list__container {
+  list-style: none;
+  cursor: default;
+}
+
+.list__item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.25rem;
+  margin: auto;
+  padding: 0.75rem;
+  width: 80%;
+}
+
+.list__item:hover {
+  background: #fefffc;
+}
+
+.list__content {
+  flex: 9 1;
+  overflow-wrap: anywhere;
+}
+
+.list__edit-content {
+  flex: 9 1;
+  font-size: 1.25rem;
+}
+
+.list__btns {
+  flex: 1 0 0.5rem;
+}
+
+.done {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.done p {
+  text-decoration: line-through;
+}
+
+.hide {
+  display: none;
+}
