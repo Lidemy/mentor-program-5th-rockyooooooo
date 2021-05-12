@@ -142,6 +142,9 @@
       filter: brightness(1.2);
     }
 
+    .hide {
+      display: none;
+    }
     /* RWD */
     @media (max-width: 1200px) {
       .header__nav {
@@ -178,7 +181,7 @@
   <main>
     <div class="main__description">
       <h2 class="game-title">
-        <!-- content will be injected from javascript -->
+        Loading...
       </h2>
       <p>Top 20 popular live streams sorted by current viewers</p>
     </div>
@@ -186,74 +189,43 @@
       <!-- content will be injected from javascript -->
     </div>
   </main>
-  <button class="more-btn">載入更多</button>
+  <button class="more-btn hide">載入更多</button>
 
   <script>
     const headerNav = document.querySelector('.header__nav')
     const gameTitle = document.querySelector('.game-title')
     const mainContainer = document.querySelector('.main__container')
+    const moreBtn = document.querySelector('.more-btn')
+    const BASE_URL = 'https://api.twitch.tv/kraken'
     const HEADERS = {
       headers: {
         Accept: 'application/vnd.twitchtv.v5+json',
         'Client-ID': 'gr17hvsma74whtwjtyu3hj3fwj77tb'
       }
     }
+    const STREAM_TEMPLATE = `
+      <img class="stream__preview" src="$preview" alt="">
+      <div class="stream__info">
+        <div class="stream__info__user-photo"><img src="$avatar" alt=""></div>
+        <div class="stream__info__description">
+          <h3 class="stream__info__description__title">$title</h3>
+          <p class="stream__info__description__username">$name</p>
+        </div>
+      </div>
+      `
     const GAMES_LIMIT = 5 // maximum = 100
     const STREAMS_LIMIT = 20 // maximum = 100
     let offset = 0 // Capped at 900
 
-    // 把目前列表的所有 stream 清空，並把 nav 的 active class 也清掉
-    function resetPage() {
-      const nav = [...headerNav.children]
-      nav.forEach((child) => child.classList.remove('active'))
-      mainContainer.innerHTML = ''
-    }
+    async function getTopGames() {
+      const GAMES_URL = `${BASE_URL}/games/top?limit=${GAMES_LIMIT}`
 
-    function renderSingleStream(stream) {
-      const { channel, preview } = stream
-      const { display_name, status, logo } = channel // display_name = 實況主名稱、status = 實況標題、logo = 實況主頭貼
-      const { large } = preview // large = 大的實況預覽圖
-
-      const streamDiv = document.createElement('div')
-      streamDiv.classList.add('stream')
-      streamDiv.innerHTML = `
-        <img class="stream__preview" src="${large}" alt="">
-        <div class="stream__info">
-          <div class="stream__info__user-photo"><img src="${logo}" alt=""></div>
-          <div class="stream__info__description">
-            <h3 class="stream__info__description__title">${status}</h3>
-            <p class="stream__info__description__username">${display_name}</p>
-          </div>
-        </div>
-      `
-      mainContainer.appendChild(streamDiv)
-    }
-
-    async function getStreams(name) {
-      const STREAMS_URL = `https://api.twitch.tv/kraken/streams?game=${name}&limit=${STREAMS_LIMIT}&offset=${offset}`
-
-      const data = await fetch(STREAMS_URL, HEADERS)
+      const data = await fetch(GAMES_URL, HEADERS)
         .then((response) => response.json())
-        .catch((err) => console.log('error occured on getStreams: ', err))
+        .catch((err) => console.log('error occured in getTopGames: ', err))
 
-      offset += STREAMS_LIMIT
-      return data
-    }
-
-    function renderStreams(game) {
-      // ==================================
-      gameTitle.innerText = game.innerText
-      /* 如果是按下載入更多的按鈕，則不需要這行，為了方便，所以放這個 function 裡面
-      但就這個 function 的邏輯來說似乎不應該把這行放進來 */
-      // ==================================
-      const gameName = game.innerText
-
-      getStreams(gameName)
-        .then(({ streams }) => { // 因為要拿物件底下的 streams，不想再多想一個變數名稱，所以直接在這邊解構
-          streams.forEach(stream => {
-            renderSingleStream(stream)
-          });
-        })
+      const topGames = data.top
+      return topGames
     }
 
     function renderGameLabel({ game }) { // 因為要拿物件底下的 game，不想再多想一個變數名稱，所以直接在這邊解構
@@ -265,53 +237,80 @@
       headerNav.appendChild(gameLabel)
     }
 
-    async function getTopGames() {
-      const GAMES_URL = `https://api.twitch.tv/kraken/games/top?limit=${GAMES_LIMIT}`
+    function changeGame(gameLabel) {
+      const gameName = gameLabel.innerText
+      gameTitle.innerText = gameName
+      gameLabel.classList.add('active')
+      renderStreams(gameName)
+    }
 
-      const data = await fetch(GAMES_URL, HEADERS)
+    function renderStreams(gameName) {
+      moreBtn.classList.add('hide')
+      getStreams(gameName)
+        .then(({ streams }) => { // 因為要拿物件底下的 streams，不想再多想一個變數名稱，所以直接在這邊解構
+          const fragment = document.createDocumentFragment() // 用 createDocumentFragment 期望可以提升網頁效率，但效果好像有限
+          streams.forEach(stream => fragment.appendChild(createStream(stream)));
+          mainContainer.appendChild(fragment)
+
+          moreBtn.classList.remove('hide')
+        })
+    }
+
+    async function getStreams(gameName) {
+      const STREAMS_URL = `${BASE_URL}/streams?game=${gameName}&limit=${STREAMS_LIMIT}&offset=${offset}`
+
+      const data = await fetch(STREAMS_URL, HEADERS)
         .then((response) => response.json())
-        .catch((err) => console.log('error occured on getTopGames: ', err))
+        .catch((err) => console.log('error occured in getStreams: ', err))
 
-      const topGames = data.top
-      return topGames
+      offset += STREAMS_LIMIT
+      return data
+    }
+
+    function createStream(stream) {
+      const { channel, preview } = stream
+      const { display_name, status, logo } = channel // display_name = 實況主名稱、status = 實況標題、logo = 實況主頭貼
+      const { large } = preview // large = 大的實況預覽圖
+
+      const streamDiv = document.createElement('div')
+      streamDiv.classList.add('stream')
+      streamDiv.innerHTML = STREAM_TEMPLATE
+        .replace('$preview', large)
+        .replace('$avatar', logo)
+        .replace('$title', status)
+        .replace('$name', display_name)
+
+      return streamDiv
+    }
+
+    // 把目前列表的所有 stream 清空，並把 nav 的 active class 也清掉
+    function resetPage() {
+      const nav = [...headerNav.children]
+      nav.forEach((child) => child.classList.remove('active'))
+      mainContainer.innerHTML = ''
+      offset = 0
     }
 
     getTopGames()
-      .then((topGames) => {
-        topGames.forEach((game) => renderGameLabel(game))
-      })
-      .then(() => {
-        const mostPopularGame = headerNav.children[0]
-        // 前五熱門遊戲列出來後，把第一個預設為 active
-        mostPopularGame.classList.add('active')
-        // 預設顯示最熱門遊戲的實況列表
-        renderStreams(mostPopularGame)
-      }) 
+      .then((topGames) => topGames.forEach((game) => renderGameLabel(game)))
+      .then(() => changeGame(headerNav.children[0])) // 預設顯示最熱門遊戲的實況列表
 
     // 以下 Event Listener 區
 
     headerNav.addEventListener('click', (e) => {
-
       const target = e.target
       // 如果點擊已經列出實況列表的遊戲名稱，不做任何事，避免重複發送 request
       if (target.classList.contains('active')) return
       if (target.classList.contains('game-label')) {
         resetPage();
-        offset = 0
-        // 在小螢幕下，按下漢堡選單中的選項後，關閉漢堡選單
+        // 在小螢幕下，按下漢堡選單中的選項後，關閉漢堡選單，不影響大尺寸螢幕
         headerNav.classList.remove('show')
-        target.classList.add('active')
-        renderStreams(target)
+        changeGame(target)
       }
     })
 
-    document.querySelector('.hamburger').addEventListener('click', () => {
-      headerNav.classList.toggle('show')
-    })
-
-    document.querySelector('.more-btn').addEventListener('click', () => {
-      renderStreams(gameTitle)
-    })
+    moreBtn.addEventListener('click', () => renderStreams(gameTitle.innerText))
+    document.querySelector('.hamburger').addEventListener('click', () => headerNav.classList.toggle('show'))
   </script>
 </body>
 </html>
