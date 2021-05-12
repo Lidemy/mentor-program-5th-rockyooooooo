@@ -80,13 +80,19 @@
       width: 25vw;
       max-width: 500px;
       min-width: 300px;
-      transition: transform 500ms ease, filter 500ms ease;
+      transition: transform 200ms linear, filter 500ms ease, box-shadow 200ms linear;
       cursor: default;
     }
 
     .stream:hover {
-      transform: scale(1.1);
+      transform: translate(8px, -8px);
       filter: brightness(1.2);
+    }
+
+    .empty-stream {
+      width: 25vw;
+      max-width: 500px;
+      min-width: 300px;
     }
 
     .stream__preview {
@@ -251,7 +257,9 @@
           const fragment = document.createDocumentFragment() // 用 createDocumentFragment 期望可以提升網頁效率，但效果好像有限
           streams.forEach(stream => fragment.appendChild(createStream(stream)));
           mainContainer.appendChild(fragment)
-
+          removeAllEmptyStreams()
+          addEmptyStream()
+          addEmptyStream()
           moreBtn.classList.remove('hide')
         })
     }
@@ -283,6 +291,16 @@
       return streamDiv
     }
 
+    function addEmptyStream() {
+      const emptyDiv = document.createElement('div')
+      emptyDiv.classList.add('empty-stream')
+      mainContainer.appendChild(emptyDiv)
+    }
+    
+    function removeAllEmptyStreams() {
+      const emptyDivs = document.querySelectorAll('.empty-stream')
+      for (const div of emptyDivs) mainContainer.removeChild(div)
+    }
     // 把目前列表的所有 stream 清空，並把 nav 的 active class 也清掉
     function resetPage() {
       const nav = [...headerNav.children]
@@ -311,6 +329,29 @@
 
     moreBtn.addEventListener('click', () => renderStreams(gameTitle.innerText))
     document.querySelector('.hamburger').addEventListener('click', () => headerNav.classList.toggle('show'))
+
+    function randomColor() {
+      return Math.floor(Math.random()*360);
+    }
+    
+    // add box-shadow while hovering
+    mainContainer.addEventListener('mouseover', (e) => {
+      const target = e.target.closest('.stream')
+      if (target) {
+        if (target.classList.contains('stream')) {
+         target.style.boxShadow = `-8px 8px 0 0 hsl(${randomColor()}, 100%, 50%)`
+        }
+      }
+    })
+
+    mainContainer.addEventListener('mouseout', (e) => {
+      const target = e.target.closest('.stream')
+      if (target) {
+        if (target.classList.contains('stream')) {
+         target.style.boxShadow = ''
+        }
+      }
+    })
   </script>
 </body>
 </html>
