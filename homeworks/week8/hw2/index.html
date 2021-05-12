@@ -96,32 +96,47 @@
     }
 
     .stream__preview {
+      background: url(./preview.jfif) center/cover no-repeat;
+      /* 0.5625 是依照 twitch 給的 preview 圖比例下去計算，只用 height: 100% 會造成下面有多餘空間 */
+      height: calc(25vw * 0.5625);
+      max-height: calc(500px * 0.5625);
+      min-height: calc(300px * 0.5625);
+    }
+
+    .stream__preview img {
       width: 100%;
+      opacity: 0;
+      transition: opacity 500ms ease;
     }
 
     .stream__info {
       display: flex;
-      height: 80px;
       justify-content: center;
+      align-items: center;
       gap: 5px;
+      padding: 0 10px;
     }
 
     .stream__info__user-photo {
-      width: 20%;
-      text-align: center;
+      background: #333;
+      height: 70px;
+      flex: 0 0 70px;
+      border-radius: 50%;
+      margin-right: 10px;
+      overflow: hidden;
     }
 
     .stream__info__user-photo img {
-      margin: 0.25rem;
-      border-radius: 50%;
-      height: 90%;
+      width: 100%;
+      opacity: 0;
+      transition: opacity 500ms ease;
     }
 
     .stream__info__description {
       width: 70%;
+      flex: 1;
       font-size: 20px;
       line-height: 35px;
-      margin: 0 15px;
       padding: 10px 0;
     }
 
@@ -149,7 +164,7 @@
     }
 
     .hide {
-      display: none;
+      opacity: 0;
     }
     /* RWD */
     @media (max-width: 1200px) {
@@ -180,7 +195,7 @@
   <header>
     <h2 class="header__title">Twitch Top Games</h2>
     <nav class="header__nav">
-      <!-- content will be injected from javascript -->
+      <!-- content will be injected by javascript -->
     </nav>
     <span class="material-icons-outlined hamburger">menu</span>
   </header>
@@ -192,7 +207,7 @@
       <p>Top 20 popular live streams sorted by current viewers</p>
     </div>
     <div class="main__container">
-      <!-- content will be injected from javascript -->
+      <!-- content will be injected by javascript -->
     </div>
   </main>
   <button class="more-btn hide">載入更多</button>
@@ -210,9 +225,11 @@
       }
     }
     const STREAM_TEMPLATE = `
-      <img class="stream__preview" src="$preview" alt="">
+      <div class="stream__preview">
+        <img src="$preview" alt="" onload="this.style.opacity = 1">
+      </div>
       <div class="stream__info">
-        <div class="stream__info__user-photo"><img src="$avatar" alt=""></div>
+        <div class="stream__info__user-photo"><img src="$avatar" alt="" onload="this.style.opacity = 1"></div>
         <div class="stream__info__description">
           <h3 class="stream__info__description__title">$title</h3>
           <p class="stream__info__description__username">$name</p>
@@ -251,7 +268,7 @@
     }
 
     function renderStreams(gameName) {
-      moreBtn.classList.add('hide')
+      moreBtn.classList.add('hide') // 載入實況時先把載入更多的按鈕隱藏，載入完成再顯示
       getStreams(gameName)
         .then(({ streams }) => { // 因為要拿物件底下的 streams，不想再多想一個變數名稱，所以直接在這邊解構
           const fragment = document.createDocumentFragment() // 用 createDocumentFragment 期望可以提升網頁效率，但效果好像有限
@@ -291,6 +308,7 @@
       return streamDiv
     }
 
+    // 在最後面加入幾個空的 div，可以讓實況列表更整齊
     function addEmptyStream() {
       const emptyDiv = document.createElement('div')
       emptyDiv.classList.add('empty-stream')
@@ -339,7 +357,7 @@
       const target = e.target.closest('.stream')
       if (target) {
         if (target.classList.contains('stream')) {
-         target.style.boxShadow = `-8px 8px 0 0 hsl(${randomColor()}, 100%, 50%)`
+         target.style.boxShadow = `-8px 8px 0 0 hsl(${randomColor()}, 100%, 50%)` // s 設為 100%，L 設為 50%，避免暗色會跟背景不好分辨
         }
       }
     })
