@@ -23,6 +23,11 @@
     }
 
     header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -32,6 +37,10 @@
     }
 
     a {
+      text-decoration: none;
+    }
+
+    .header__nav .game-label {
       color: black;
       text-decoration: none;
       margin: 5px;
@@ -39,8 +48,8 @@
       transition: background 500ms ease, color 500ms ease;
     }
 
-    a:hover,
-    .active {
+    .header__nav .game-label:hover,
+    .header__nav .game-label.active {
       background: #4e4f4e;
       color: white;
     }
@@ -50,7 +59,8 @@
     }
 
     main {
-      color: white;
+      position: relative;
+      top: 66px;
     }
 
     .main__description {
@@ -58,6 +68,7 @@
       line-height: 3rem;
       margin: 3rem 0;
       font-size: 20px;
+      color: white;
     }
 
     .hamburger {
@@ -136,6 +147,7 @@
       width: 70%;
       flex: 1;
       font-size: 20px;
+      color: white;
       line-height: 35px;
       padding: 10px 0;
     }
@@ -144,6 +156,37 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+    }
+
+    .stream__info__description__bottom {
+      display: flex;
+    }
+
+    .stream__info__description__username {
+      flex: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    
+    .stream__info__description__viewers {
+      position: relative;
+      right: 0;
+      margin-left: 14px;
+      border-radius: 5px;
+      padding: 2px;
+      font-size: 16px;
+    }
+
+    .stream__info__description__viewers::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: -14px;
+      background: red;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
     }
     /* Streams styling */
 
@@ -225,16 +268,21 @@
       }
     }
     const STREAM_TEMPLATE = `
-      <div class="stream__preview">
-        <img src="$preview" alt="" onload="this.style.opacity = 1">
-      </div>
-      <div class="stream__info">
-        <div class="stream__info__user-photo"><img src="$avatar" alt="" onload="this.style.opacity = 1"></div>
-        <div class="stream__info__description">
-          <h3 class="stream__info__description__title">$title</h3>
-          <p class="stream__info__description__username">$name</p>
+      <a class="Stream__url" href="$url">
+        <div class="stream__preview">
+          <img src="$preview" alt="stream-preview" onload="this.style.opacity = 1">
         </div>
-      </div>
+        <div class="stream__info">
+          <div class="stream__info__user-photo"><img src="$avatar" alt="user-avatar" onload="this.style.opacity = 1"></div>
+          <div class="stream__info__description">
+            <h3 class="stream__info__description__title">$title</h3>
+            <div class="stream__info__description__bottom">
+              <p class="stream__info__description__username">$name</p>
+              <span class="stream__info__description__viewers">$viewers</span>
+            </div>
+          </div>
+        </div>
+      </a>
       `
     const GAMES_LIMIT = 5 // maximum = 100
     const STREAMS_LIMIT = 20 // maximum = 100
@@ -293,17 +341,19 @@
     }
 
     function createStream(stream) {
-      const { channel, preview } = stream
-      const { display_name, status, logo } = channel // display_name = 實況主名稱、status = 實況標題、logo = 實況主頭貼
+      const { channel, preview, viewers } = stream
+      const { url, display_name, status, logo } = channel // display_name = 實況主名稱、status = 實況標題、logo = 實況主頭貼
       const { large } = preview // large = 大的實況預覽圖
 
       const streamDiv = document.createElement('div')
       streamDiv.classList.add('stream')
       streamDiv.innerHTML = STREAM_TEMPLATE
+        .replace('$url', url)
         .replace('$preview', large)
         .replace('$avatar', logo)
         .replace('$title', status)
         .replace('$name', display_name)
+        .replace('$viewers', viewers)
 
       return streamDiv
     }
