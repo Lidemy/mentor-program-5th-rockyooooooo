@@ -131,6 +131,12 @@ header .logo {
   border-radius: 16px;
   border: none;
   cursor: pointer;
+  transition: transform 500ms ease;
+}
+
+.games__start-btn:hover,
+.games__again-btn:hover {
+  transform: scale(1.1);
 }
 
 .games h2 {
