@@ -292,8 +292,13 @@
       const GAMES_URL = `${BASE_URL}/games/top?limit=${GAMES_LIMIT}`
 
       const data = await fetch(GAMES_URL, HEADERS)
-        .then((response) => response.json())
-        .catch((err) => console.log('error occured in getTopGames: ', err))
+        .then((response) => {
+          if (response.ok || response.status === 200) {
+            return response.json()
+          }
+          throw new Error('Response status is not ok')
+        })
+        .catch((err) => console.log('error occured in getTopGames: ', err.message))
 
       const topGames = data.top
       return topGames
@@ -333,8 +338,13 @@
       const STREAMS_URL = `${BASE_URL}/streams?game=${gameName}&limit=${STREAMS_LIMIT}&offset=${offset}`
 
       const data = await fetch(STREAMS_URL, HEADERS)
-        .then((response) => response.json())
-        .catch((err) => console.log('error occured in getStreams: ', err))
+        .then((response) => {
+          if (response.ok || response.status === 200) {
+            return response.json()
+          }
+          throw new Error('Response status is not ok')
+        })
+        .catch((err) => console.log('error occured in getStreams: ', err.message))
 
       offset += STREAMS_LIMIT
       return data

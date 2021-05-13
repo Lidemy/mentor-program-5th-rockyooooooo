@@ -72,6 +72,7 @@
     const nav = document.querySelector('.header__nav')
     const games = document.querySelector('.games')
     const gamesHTML = games.innerHTML
+    const errorMsg = '系統不穩定，請再試一次'
 
     hamburger.addEventListener('click', () => {
       nav.classList.toggle('show')
@@ -80,7 +81,7 @@
     function renderPrizePage(data) {
       const { prize } = data
 
-      if (!prize) return alert('系統不穩定，請再試一次')
+      if (!prize) return alert(errorMsg)
 
       const lotteryPrize = {
         FIRST: '恭喜你中頭獎了！日本東京來回雙人遊！',
@@ -102,10 +103,13 @@
       if (e.target.classList.contains('games__start-btn')) {
           fetch('https://dvwhnbka7d.execute-api.us-east-1.amazonaws.com/default/lottery')
             .then((response) => {
-              if (response.ok || response.status === 200) return response.json()
+              if (response.ok || response.status === 200) {
+                return response.json()
+              }
+              throw new Error(errorMsg)
             })
             .then((data) => renderPrizePage(data))
-            .catch((err) => alert('系統不穩定，請再試一次'))
+            .catch((err) => alert(errorMsg))
       } else if (e.target.classList.contains('games__again-btn')) {
         games.classList.remove('FIRST')
         games.classList.remove('SECOND')
