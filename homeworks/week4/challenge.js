@@ -5,7 +5,6 @@ const LIMIT = 100
 const TOTAL = 200
 const GAME = process.argv[2]
 
-// -------------------------------------------------------------------------
 function getStreams(allStreams, game, offset, limit, total) {
   request.get(
     {
@@ -21,7 +20,15 @@ function getStreams(allStreams, game, offset, limit, total) {
         limit
       }
     }, (err, res, body) => {
-      if (err) return console.log(`資料獲取失敗，${err}`)
+      if (err) {
+        return console.log(`資料獲取失敗，${err}`)
+      }
+      if (res.statusCode >= 400 && res.statusCode < 500) {
+        return console.log(`Status Code: ${res.statusCode}, Client side error`)
+      }
+      if (res.statusCode >= 500) {
+        return console.log(`Status Code: ${res.statusCode}, Server side error`)
+      }
 
       let data
       try {
@@ -31,6 +38,8 @@ function getStreams(allStreams, game, offset, limit, total) {
       }
 
       const { streams } = data
+
+      if (!streams.length) return console.log('No such game stream')
 
       for (const stream of streams) {
         const { channel } = stream
