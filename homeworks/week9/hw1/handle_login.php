@@ -14,7 +14,7 @@
   }
 
   // 取得 users 資料
-  $format = 'SELECT * FROM users WHERE username = "%s" AND password = "%s"';
+  $format = 'SELECT * FROM allenliao_board_users WHERE username = "%s" AND password = "%s"';
   $sql = sprintf($format, $username, $password);
   $result = $conn->query($sql);
   if (!$result) {

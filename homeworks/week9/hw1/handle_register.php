@@ -20,7 +20,7 @@
   }
 
   // 新增 user
-  $format = 'INSERT INTO users(username, password, nickname) VALUES("%s", "%s", "%s")';
+  $format = 'INSERT INTO allenliao_board_users(username, password, nickname) VALUES("%s", "%s", "%s")';
   $sql = sprintf($format, $username, $password, $nickname);
   $result = $conn->query($sql);
   if (!$result) {

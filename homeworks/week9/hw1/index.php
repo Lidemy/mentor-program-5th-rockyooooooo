@@ -8,7 +8,7 @@
     $username = $_SESSION['username'];
   
     // 取得 users 資料
-    $format = 'SELECT nickname FROM users WHERE username = "%s"';
+    $format = 'SELECT nickname FROM allenliao_board_users WHERE username = "%s"';
     $sql = sprintf($format, $username);
     $result = $conn->query($sql);
     if (!$result) {
@@ -19,7 +19,7 @@
   }
 
   // 取得 comments 資料
-  $format = 'SELECT * FROM comments ORDER BY id DESC';
+  $format = 'SELECT * FROM allenliao_board_comments ORDER BY id DESC';
   $sql = sprintf($format);
   $result = $conn->query($sql);
   if (!$result) {

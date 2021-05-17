@@ -18,7 +18,7 @@
 
   $username = $_SESSION['username'];
   // 取得 users 資料
-  $format = 'SELECT nickname FROM users WHERE username = "%s"';
+  $format = 'SELECT nickname FROM allenliao_board_users WHERE username = "%s"';
   $sql = sprintf($format, $username);
   $result = $conn->query($sql);
   if (!$result) {
@@ -30,7 +30,7 @@
   $content = htmlentities($_POST['content']);
 
   // 新增 comment
-  $format = 'INSERT INTO comments(nickname, content) VALUES("%s", "%s")';
+  $format = 'INSERT INTO allenliao_board_comments(nickname, content) VALUES("%s", "%s")';
   $sql = sprintf($format, $nickname, $content);
   $result = $conn->query($sql);
   if (!$result) {
