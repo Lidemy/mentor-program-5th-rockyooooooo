@@ -18,20 +18,23 @@ VARCHAR：
   - 明確知道要儲存的字串長度
   - 需要每一列的索引
 
+
 ## Cookie 是什麼？在 HTTP 這一層要怎麼設定 Cookie，瀏覽器又是怎麼把 Cookie 帶去 Server 的？
 
 因為 HTTP 是一個無狀態協議（Stateless Protocol），所以對 Server 來說，Client 的每次請求都是不一樣的，Server 沒辦法分辨每次請求之間的關係
-既然如此，假設有一個網站有會員系統，那 Server 要怎麼分辨 Client 是不是處於登入狀態呢？這時候 Cookie 就出現了，Cookie 可以用來儲存小片段的資料
+
+既然如此，假設有一個網站有會員系統，那 Server 要怎麼分辨 Client 是不是處於登入狀態呢？這時候 Cookie 就派上用場了，Cookie 是存在瀏覽器裡面的小型文字檔案
 
 Cookie 主要有三個目的：
 - Session 管理
 - 個人化設定
 - 紀錄並分析使用者行為
 
-當 Client 成功登入帳號，Server 可以透過 Set-Cookie 這個 response header 來讓瀏覽器保存起來
-當下次 Client 再次發送請求時，瀏覽器就會附上這個 Cookie
+當 Client 成功登入帳號，Server 可以透過 Set-Cookie 這個 response header 來讓瀏覽器保存起來，當下次 Client 再次發送請求時，瀏覽器就會附上這個 Cookie，
 這樣 Server 就可以根據 Cookie 來檢查 Client 是不是有登入了
+
 也可以用在使用者的個人化設定，或是 Server 要根據使用者的行為來投放廣告...等等
+
 
 ## 我們本週實作的會員系統，你能夠想到什麼潛在的問題嗎？
 
