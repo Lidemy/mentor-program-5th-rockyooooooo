@@ -61,6 +61,7 @@
     main {
       position: relative;
       top: 66px;
+      padding-bottom: 5rem;
     }
 
     .main__description {
@@ -197,7 +198,7 @@
       font-size: 1.5rem;
       width: 200px;
       height: 80px;
-      margin: 0 auto 5rem;
+      margin: 0 auto;
       border: none;
       cursor: pointer;
     }
@@ -208,6 +209,11 @@
 
     .hide {
       opacity: 0;
+    }
+
+    .disable {
+      background: rgba(0, 0, 0, 0);
+      cursor: default;
     }
     /* RWD */
     @media (max-width: 1200px) {
@@ -232,6 +238,23 @@
       }
     }
     /* RWD */
+
+    /* 隱藏滾動條（滾動條會擠壓頁面寬度，造成頁面內容在滾動條出現時會變小，影響使用體驗） */
+    html {
+    overflow: -moz-hidden-unscrollable; /*注意！若只打 hidden，chrome 的其它 hidden 會出問題*/
+    height: 100%;
+    }
+
+    body {
+      height: 100%;
+      width: calc(100vw + 18px); /*瀏覽器滾動條的長度大約是 18px*/
+      overflow: auto;
+    }
+
+    body::-webkit-scrollbar {
+      display: none;
+    }
+    /* 隱藏滾動條（滾動條會擠壓頁面寬度，造成頁面內容在滾動條出現時會變小，影響使用體驗） */
   </style>
 </head>
 <body>
@@ -252,8 +275,8 @@
     <div class="main__container">
       <!-- content will be injected by javascript -->
     </div>
+    <button class="more-btn hide">載入更多</button>
   </main>
-  <button class="more-btn hide">載入更多</button>
 
   <script>
     const headerNav = document.querySelector('.header__nav')
@@ -268,7 +291,7 @@
       }
     }
     const STREAM_TEMPLATE = `
-      <a class="Stream__url" href="$url">
+      <a class="Stream__url" href="$url" target="_blank">
         <div class="stream__preview">
           <img src="$preview" alt="stream-preview" onload="this.style.opacity = 1">
         </div>
@@ -321,6 +344,7 @@
     }
 
     function renderStreams(gameName) {
+      checkOffset() // 檢查 offset 是否到達上限
       moreBtn.classList.add('hide') // 載入實況時先把載入更多的按鈕隱藏，載入完成再顯示
       getStreams(gameName)
         .then(({ streams }) => { // 因為要拿物件底下的 streams，不想再多想一個變數名稱，所以直接在這邊解構
@@ -332,6 +356,16 @@
           addEmptyStream()
           moreBtn.classList.remove('hide')
         })
+    }
+
+    function checkOffset() {
+      if (offset >= 900) {
+        moreBtn.classList.add('disable')
+        moreBtn.innerText = '沒有更多實況'
+      } else {
+        moreBtn.classList.remove('disable')
+        moreBtn.innerText = '載入更多實況'
+      }
     }
 
     async function getStreams(gameName) {
@@ -405,7 +439,7 @@
       }
     })
 
-    moreBtn.addEventListener('click', () => renderStreams(gameTitle.innerText))
+    moreBtn.addEventListener('click', () => moreBtn.classList.contains('disable') ? '' : renderStreams(gameTitle.innerText))
     document.querySelector('.hamburger').addEventListener('click', () => headerNav.classList.toggle('show'))
 
     function randomColor() {
