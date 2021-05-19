@@ -12,6 +12,7 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      user-select: none;
     }
 
     body {
@@ -35,31 +36,42 @@
       width: 100%;
       height: 100%;
       margin: 0 auto;
-      transform: translate(-100%)
     }
 
     .carousel__item {
+      position: absolute;
       min-width: 100%;
       height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 8rem;
+      font-family: monospace;
+      color: cornsilk;
       transition: all 500ms ease;
     }
 
     .item1 {
-      background: red;
+      background: #264653;
     }
     .item2 {
-      background: green;
+      background: #2a9d8f;
     }
     .item3 {
-      background: blue;
+      background: #e9c46a;
     }
 
-    .active {
-      z-index: 10;
-    }
-
-    .hide {
+    .left {
       z-index: -10;
+      transform: translate(-80vw);
+    }
+    .middle {
+      z-index: 10;
+      transform: translate(0vw);
+    }
+    .right {
+      z-index: -10;
+      transform: translate(80vw);
     }
 
     .prev-container,
@@ -90,8 +102,25 @@
       box-shadow: inset -100px 0px 30px -100px rgba(0, 0, 0, 0.5);
     }
 
-    .material-icons-outlined {
-      user-select: none;
+    .indicator {
+      position: absolute;
+      width: 50px;
+      height: 12px;
+      background: cornsilk;
+      left: 50%;
+      bottom: 40px;
+      z-index: 100;
+      cursor: pointer;
+    }
+
+    .indicator1 {
+      transform: translate(-250%);
+    }
+    .indicator2 {
+      transform: translate(-50%);
+    }
+    .indicator3 {
+      transform: translate(150%);
     }
   </style>
 </head>
@@ -99,62 +128,77 @@
   <div class="carousel__window">
     <div class="prev-container"><span class="material-icons-outlined prev">chevron_left</span></div>
     <div class="carousel__container">
-      <div class="carousel__item item1"></div>
-      <div class="carousel__item item2 active"></div>
-      <div class="carousel__item item3 hide"></div>
+      <div class="carousel__item item1 middle">1</div>
+      <div class="carousel__item item2 right">2</div>
+      <div class="carousel__item item3 left">3</div>
     </div>
     <div class="next-container"><span class="material-icons-outlined next">chevron_right</span></div>
+    <div class="indicator indicator1"></div>
+    <div class="indicator indicator2"></div>
+    <div class="indicator indicator3"></div>
   </div>
 
   <script>
     const carouselWindow = document.querySelector('.carousel__window')
-    const carouselContainer = document.querySelector('.carousel__container')
-    let [move1, move2, move3] = [0, 0, 0]
     let isMoving = false
 
-    function moveToLastPosition (move, node) {
-      move += 200
-      node.classList.add('hide')
-      return move
-    }
+    function indicator(index) {
+      isMoving = true
+      const firstItem = document.querySelector('.item1')
+      const secondItem = document.querySelector('.item2')
+      const thirdItem = document.querySelector('.item3')
+      for (const item of [firstItem, secondItem, thirdItem]) item.classList.remove('left', 'middle', 'right')
 
-    function moveToFisrtPosition (move, node) {
-      move -= 200
-      node.classList.add('hide')
-      return move
-    }
+      switch(index) {
+        case 'first':
+          firstItem.classList.add('middle')
+          secondItem.classList.add('right')
+          thirdItem.classList.add('left')
+          break
+        case 'second':
+          firstItem.classList.add('left')
+          secondItem.classList.add('middle')
+          thirdItem.classList.add('right')
+          break
+        case 'third':
+          firstItem.classList.add('right')
+          secondItem.classList.add('left')
+          thirdItem.classList.add('middle')
+          break
+        default:
+          break
+      }
 
-    function showOnWindow (node) {
-      node.classList.add('active')
-      node.classList.remove('hide')
+      setTimeout(() => isMoving = false, 500)
     }
 
     function carousel(direction) {
       // isMoving 設為 true，禁止轉場效果再次被觸發
       isMoving = true
 
+      const rightItem = document.querySelector('.right')
+      const middleItem = document.querySelector('.middle')
+      const leftItem = document.querySelector('.left')
+
       // 開始轉場
-      if (direction === 'slideToLeft') {
-        move1 === 0 ? move1 = moveToLastPosition(move1, carouselContainer.children[0]) : move1 -= 100
-        carouselContainer.children[0].style.transform = `translate(${move1}%)`
-        move1 === 100 ? showOnWindow(carouselContainer.children[0]) : carouselContainer.children[0].classList.remove('active')
-        move2 === -100 ? move2 = moveToLastPosition(move2, carouselContainer.children[1]) : move2 -= 100
-        carouselContainer.children[1].style.transform = `translate(${move2}%)`
-        move2 === 0 ? showOnWindow(carouselContainer.children[1]) : carouselContainer.children[1].classList.remove('active')
-        move3 === -200 ? move3 = moveToLastPosition(move3, carouselContainer.children[2]) : move3 -= 100
-        carouselContainer.children[2].style.transform = `translate(${move3}%)`
-        move3 === -100 ? showOnWindow(carouselContainer.children[2]) : carouselContainer.children[2].classList.remove('active')
-      } else if (direction === 'slideToRight') {
-        move1 === 200 ? move1 = moveToFisrtPosition(move1, carouselContainer.children[0]) : move1 += 100
-        carouselContainer.children[0].style.transform = `translate(${move1}%)`
-        move1 === 100 ? showOnWindow(carouselContainer.children[0]) : carouselContainer.children[0].classList.remove('active')
-        move2 === 100 ? move2 = moveToFisrtPosition(move2, carouselContainer.children[1]) : move2 += 100
-        carouselContainer.children[1].style.transform = `translate(${move2}%)`
-        move2 === 0 ? showOnWindow(carouselContainer.children[1]) : carouselContainer.children[1].classList.remove('active')
-        move3 === 0 ? move3 = moveToFisrtPosition(move3, carouselContainer.children[2]) : move3 += 100
-        carouselContainer.children[2].style.transform = `translate(${move3}%)`
-        move3 === -100 ? showOnWindow(carouselContainer.children[2]) : carouselContainer.children[2].classList.remove('active')
+      switch(direction) {
+        case 'slideToLeft':
+          rightItem.classList.add('middle')
+          middleItem.classList.add('left')
+          leftItem.classList.add('right')
+          break
+        case 'slideToRight':
+          rightItem.classList.add('left')
+          middleItem.classList.add('right')
+          leftItem.classList.add('middle')
+          break
+        default:
+          break
       }
+
+      rightItem.classList.remove('right')
+      middleItem.classList.remove('middle')
+      leftItem.classList.remove('left')
 
       // 500ms 後把 isMoving 設回 false，讓轉場效果可以再次被觸發
       setTimeout(() => isMoving = false, 500)
@@ -165,6 +209,9 @@
       if (!isMoving) {
         if (e.target.classList.contains('prev-container') || e.target.classList.contains('prev')) carousel('slideToLeft')
         if (e.target.classList.contains('next-container') || e.target.classList.contains('next')) carousel('slideToRight')
+        if (e.target.classList.contains('indicator1')) indicator('first')
+        if (e.target.classList.contains('indicator2')) indicator('second')
+        if (e.target.classList.contains('indicator3')) indicator('third')
       }
     })
   </script>
