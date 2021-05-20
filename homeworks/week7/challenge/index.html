@@ -45,10 +45,30 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      opacity: 0;
       font-size: 8rem;
       font-family: monospace;
       color: cornsilk;
-      transition: all 500ms ease;
+    }
+
+    .carousel__item.active,
+    .carousel__item.next,
+    .carousel__item.prev {
+      opacity: 1;
+    }
+
+    .carousel__item.next {
+      right: -100%;
+    }
+    .carousel__item.prev {
+      left: -100%;
+    }
+
+    .carousel__item.slide-to-next {
+      transform: translate(-100%);
+    }
+    .carousel__item.slide-to-prev {
+      transform: translate(100%);
     }
 
     .item1 {
@@ -60,18 +80,8 @@
     .item3 {
       background: #e9c46a;
     }
-
-    .left {
-      z-index: -10;
-      transform: translate(-80vw);
-    }
-    .middle {
-      z-index: 10;
-      transform: translate(0vw);
-    }
-    .right {
-      z-index: -10;
-      transform: translate(80vw);
+    .item4 {
+      background: #f4a261;
     }
 
     .prev-container,
@@ -102,116 +112,114 @@
       box-shadow: inset -100px 0px 30px -100px rgba(0, 0, 0, 0.5);
     }
 
-    .indicator {
+    .indicators {
       position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translate(-50%);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      gap: 3rem;
+    }
+
+    .indicator {
       width: 50px;
       height: 12px;
       background: cornsilk;
-      left: 50%;
-      bottom: 40px;
-      z-index: 100;
       cursor: pointer;
+      opacity: 0.5;
     }
 
-    .indicator1 {
-      transform: translate(-250%);
-    }
-    .indicator2 {
-      transform: translate(-50%);
-    }
-    .indicator3 {
-      transform: translate(150%);
+    .indicator.active {
+      opacity: 1;
     }
   </style>
 </head>
 <body>
   <div class="carousel__window">
-    <div class="prev-container"><span class="material-icons-outlined prev">chevron_left</span></div>
+    <div class="prev-container"><span class="material-icons-outlined prev-btn">chevron_left</span></div>
     <div class="carousel__container">
-      <div class="carousel__item item1 middle">1</div>
-      <div class="carousel__item item2 right">2</div>
-      <div class="carousel__item item3 left">3</div>
+      <div class="carousel__item item1 active">1</div>
+      <div class="carousel__item item2 next">2</div>
+      <div class="carousel__item item3">3</div>
+      <div class="carousel__item item4 prev">4</div>
     </div>
-    <div class="next-container"><span class="material-icons-outlined next">chevron_right</span></div>
-    <div class="indicator indicator1"></div>
-    <div class="indicator indicator2"></div>
-    <div class="indicator indicator3"></div>
+    <div class="next-container"><span class="material-icons-outlined next-btn">chevron_right</span></div>
+    <div class="indicators">
+      <div class="indicator active" data-index="0"></div>
+      <div class="indicator" data-index="1"></div>
+      <div class="indicator" data-index="2"></div>
+      <div class="indicator" data-index="3"></div>
+    </div>
   </div>
 
   <script>
     const carouselWindow = document.querySelector('.carousel__window')
+    const carouselContainer = document.querySelector('.carousel__container')
     let isMoving = false
+    let index = 0 // 用來追蹤當前 slide
 
-    function indicator(index) {
-      isMoving = true
-      const firstItem = document.querySelector('.item1')
-      const secondItem = document.querySelector('.item2')
-      const thirdItem = document.querySelector('.item3')
-      for (const item of [firstItem, secondItem, thirdItem]) item.classList.remove('left', 'middle', 'right')
+    function indicatorSwitch(target) {
+      const targetIndex = Number(target.dataset.index)
+      if (targetIndex === index) return
+      // 目標 slide 在當前 slide 右邊，用 next，反之則用 prev，直接把陣列裡的元素對調，節省 code
+      const direction = ['next', 'prev']
+      if (targetIndex < index) [direction[0], direction[1]] = [direction[1], direction[0]]
 
-      switch(index) {
-        case 'first':
-          firstItem.classList.add('middle')
-          secondItem.classList.add('right')
-          thirdItem.classList.add('left')
-          break
-        case 'second':
-          firstItem.classList.add('left')
-          secondItem.classList.add('middle')
-          thirdItem.classList.add('right')
-          break
-        case 'third':
-          firstItem.classList.add('right')
-          secondItem.classList.add('left')
-          thirdItem.classList.add('middle')
-          break
-        default:
-          break
-      }
-
-      setTimeout(() => isMoving = false, 500)
+      index = targetIndex
+      // 如果要跳轉的 slide 就在隔壁，直接翻頁，不用跳轉
+      if (carouselContainer.children[index].classList.contains(direction[1])) return carouselTurn(`slide-to-${direction[1]}`)
+      // 把要跳轉的目標設成 next 後 slide to next，vice versa
+      document.querySelector(`.${direction[0]}`).classList.remove(direction[0])
+      carouselContainer.children[index].classList.add(direction[0])
+      carouselTurn(`slide-to-${direction[0]}`)
     }
 
-    function carousel(direction) {
-      // isMoving 設為 true，禁止轉場效果再次被觸發
+    function carouselTurn(action) {
       isMoving = true
-
-      const rightItem = document.querySelector('.right')
-      const middleItem = document.querySelector('.middle')
-      const leftItem = document.querySelector('.left')
-
+      const activeItem = document.querySelector('.carousel__item.active')
+      const nextItem = document.querySelector('.carousel__item.next')
+      const prevItem = document.querySelector('.carousel__item.prev')
       // 開始轉場
-      switch(direction) {
-        case 'slideToLeft':
-          rightItem.classList.add('middle')
-          middleItem.classList.add('left')
-          leftItem.classList.add('right')
-          break
-        case 'slideToRight':
-          rightItem.classList.add('left')
-          middleItem.classList.add('right')
-          leftItem.classList.add('middle')
-          break
-        default:
-          break
+      for (const item of [activeItem, nextItem, prevItem]) {
+        // 每次轉場後會 transition: none，所以要重新加上 transition
+        item.style.transition = 'transform 300ms ease';
+        item.classList.add(action)
       }
-
-      rightItem.classList.remove('right')
-      middleItem.classList.remove('middle')
-      leftItem.classList.remove('left')
-
-      // 500ms 後把 isMoving 設回 false，讓轉場效果可以再次被觸發
-      setTimeout(() => isMoving = false, 500)
+      // hightlight 當前 slide 的 indicator
+      const indicators = document.querySelectorAll('.indicator')
+      document.querySelector('.indicator.active').classList.remove('active')
+      indicators[index].classList.add('active')
     }
+
+    // 轉場結束，carouselItems class 重新定位
+    carouselContainer.addEventListener('transitionend', () => {
+      isMoving = false
+      const carouselItems = document.querySelectorAll('.carousel__item')
+      for (const item of carouselItems) {
+        // transition: none，避免重新定位時再次觸發轉場效果，並把所有相關 class 移除，準備重新定位
+        item.style.transition = 'none'
+        item.classList.remove('active', 'next', 'prev', 'slide-to-next', 'slide-to-prev')
+      }
+      carouselItems[index === 0 ? 3 : index - 1].classList.add('prev')
+      carouselItems[index].classList.add('active')
+      carouselItems[index === 3 ? 0 : index + 1].classList.add('next')
+    })
 
     carouselWindow.addEventListener('click', (e) => {
+      const target = e.target
       // 目前沒有在轉場才執行轉場效果，避免轉場中重複點擊
       if (!isMoving) {
-        if (e.target.classList.contains('prev-container') || e.target.classList.contains('prev')) carousel('slideToLeft')
-        if (e.target.classList.contains('next-container') || e.target.classList.contains('next')) carousel('slideToRight')
-        if (e.target.classList.contains('indicator1')) indicator('first')
-        if (e.target.classList.contains('indicator2')) indicator('second')
-        if (e.target.classList.contains('indicator3')) indicator('third')
+        if (target.classList.contains('next-container') || target.classList.contains('next-btn')) {
+          index === 3 ? index = 0 : index++
+          carouselTurn('slide-to-next')
+        }
+        if (target.classList.contains('prev-container') || target.classList.contains('prev-btn')) {
+          index === 0 ? index = 3 : index--
+          carouselTurn('slide-to-prev')
+        }
+        if (target.classList.contains('indicator')) indicatorSwitch(target)
       }
     })
   </script>
