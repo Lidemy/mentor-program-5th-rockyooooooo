@@ -92,13 +92,46 @@
       width: 25vw;
       max-width: 500px;
       min-width: 300px;
-      transition: transform 200ms linear, filter 500ms ease, box-shadow 200ms linear;
+      transition: transform 150ms linear, filter 500ms ease, box-shadow 150ms linear;
       cursor: default;
     }
 
     .stream:hover {
       transform: translate(8px, -8px);
       filter: brightness(1.2);
+    }
+
+    .before-stream,
+    .after-stream {
+      content: '';
+      position: absolute;
+      background: transparent;
+      border-color: transparent;
+      transition: transform 150ms linear, border 150ms linear;
+    }
+
+    .before-stream {
+      top: 0;
+      left: 0;
+      border-style: solid;
+      border-width: 8px 0 0 8px;
+      transform-origin: left top;
+      transform: rotateY(180deg) scale(0);
+    }
+    .after-stream {
+      right: 0;
+      bottom: 0;
+      border-style: solid;
+      border-width: 8px 0 0 8px;
+      transform-origin: bottom right;
+      transform: rotateX(-180deg) scale(0);
+    }
+
+    .stream:hover .before-stream {
+      transform: rotateY(180deg) scale(1)
+    }
+    .stream:hover .after-stream {
+      transform: rotateX(-180deg) scale(1)
     }
 
     .empty-stream {
@@ -116,6 +149,7 @@
     }
 
     .stream__preview img {
+      position: relative;
       width: 100%;
       opacity: 0;
       transition: opacity 500ms ease;
@@ -291,7 +325,9 @@
       }
     }
     const STREAM_TEMPLATE = `
-      <a class="Stream__url" href="$url" target="_blank">
+      <div class="before-stream"></div>
+      <div class="after-stream"></div>
+      <a class="stream__url" href="$url" target="_blank">
         <div class="stream__preview">
           <img src="$preview" alt="stream-preview" onload="this.style.opacity = 1">
         </div>
@@ -450,8 +486,13 @@
     mainContainer.addEventListener('mouseover', (e) => {
       const target = e.target.closest('.stream')
       if (target) {
+        const beforeTarget = target.querySelector('.before-stream')
+        const afterTarget = target.querySelector('.after-stream')
         if (target.classList.contains('stream')) {
-         target.style.boxShadow = `-8px 8px 0 0 hsl(${randomColor()}, 100%, 50%)` // s 設為 100%，L 設為 50%，避免暗色會跟背景不好分辨
+          const color = `hsl(${randomColor()}, 100%, 50%)` // s 設為 100%，L 設為 50%，避免暗色會跟背景不好分辨
+          target.style.boxShadow = `-8px 8px 0 0 ${color}`
+          beforeTarget.style.borderColor = `transparent transparent transparent ${color}`
+          afterTarget.style.borderColor = `transparent transparent transparent ${color}`
         }
       }
     })
@@ -459,8 +500,12 @@
     mainContainer.addEventListener('mouseout', (e) => {
       const target = e.target.closest('.stream')
       if (target) {
+        const beforeTarget = target.querySelector('.before-stream')
+        const afterTarget = target.querySelector('.after-stream')
         if (target.classList.contains('stream')) {
          target.style.boxShadow = ''
+         beforeTarget.style.borderColor = ''
+         afterTarget.style.borderColor = ''
         }
       }
     })
