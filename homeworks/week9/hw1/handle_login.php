@@ -28,6 +28,6 @@
   } else {
     // 登入成功
     $_SESSION['username'] = $username;
-    header($loginUrl);
+    header('Location: index.php');
   }
 ?>

@@ -19,8 +19,7 @@
   }
 
   // 取得 comments 資料
-  $format = 'SELECT * FROM allenliao_board_comments ORDER BY id DESC';
-  $sql = sprintf($format);
+  $sql = 'SELECT * FROM allenliao_board_comments ORDER BY id DESC';
   $result = $conn->query($sql);
   if (!$result) {
     die('資料獲取失敗<br>' . $conn->error);
