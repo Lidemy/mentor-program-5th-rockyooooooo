@@ -157,6 +157,7 @@
   <script>
     const carouselWindow = document.querySelector('.carousel__window')
     const carouselContainer = document.querySelector('.carousel__container')
+    const numberOfItems = carouselContainer.children.length
     let isMoving = false
     let index = 0 // 用來追蹤當前 slide
 
@@ -194,17 +195,20 @@
     }
 
     // 轉場結束，carouselItems class 重新定位
-    carouselContainer.addEventListener('transitionend', () => {
-      isMoving = false
-      const carouselItems = document.querySelectorAll('.carousel__item')
-      for (const item of carouselItems) {
-        // transition: none，避免重新定位時再次觸發轉場效果，並把所有相關 class 移除，準備重新定位
-        item.style.transition = 'none'
-        item.classList.remove('active', 'next', 'prev', 'slide-to-next', 'slide-to-prev')
+    carouselContainer.addEventListener('transitionend', (e) => {
+      // 監聽在父元素，會監聽到三次轉場結束，增加 if statement 來避免多餘的執行
+      if (e.target.classList.contains('active')) {
+        isMoving = false
+        const carouselItems = document.querySelectorAll('.carousel__item')
+        for (const item of carouselItems) {
+          // transition: none，避免重新定位時再次觸發轉場效果，並把所有相關 class 移除，準備重新定位
+          item.style.transition = 'none'
+          item.classList.remove('active', 'next', 'prev', 'slide-to-next', 'slide-to-prev')
+        }
+        carouselItems[index === 0 ? numberOfItems - 1 : index - 1].classList.add('prev')
+        carouselItems[index].classList.add('active')
+        carouselItems[index === numberOfItems - 1 ? 0 : index + 1].classList.add('next')
       }
-      carouselItems[index === 0 ? 3 : index - 1].classList.add('prev')
-      carouselItems[index].classList.add('active')
-      carouselItems[index === 3 ? 0 : index + 1].classList.add('next')
     })
 
     carouselWindow.addEventListener('click', (e) => {
@@ -212,11 +216,11 @@
       // 目前沒有在轉場才執行轉場效果，避免轉場中重複點擊
       if (!isMoving) {
         if (target.classList.contains('next-container') || target.classList.contains('next-btn')) {
-          index === 3 ? index = 0 : index++
+          index === numberOfItems - 1 ? index = 0 : index++
           carouselTurn('slide-to-next')
         }
         if (target.classList.contains('prev-container') || target.classList.contains('prev-btn')) {
-          index === 0 ? index = 3 : index--
+          index === 0 ? index = numberOfItems - 1 : index--
           carouselTurn('slide-to-prev')
         }
         if (target.classList.contains('indicator')) indicatorSwitch(target)
