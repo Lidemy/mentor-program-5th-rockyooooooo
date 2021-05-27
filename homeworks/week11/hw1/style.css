@@ -1,0 +1,190 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+body {
+  background: #f7f7f7;
+}
+
+h1 {
+  margin: 10px 0;
+}
+
+h3 {
+  margin-bottom: 10px;
+  line-height: 2.5rem;
+  overflow-wrap: anywhere;
+}
+
+section + section {
+  margin-top: 20px;
+  border-top: 1px solid #c2dffb;
+  padding-top: 10px;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+}
+
+.warning {
+  background: #fec4c7;
+  padding: 10px;
+  color: #a20606;
+  text-align: center;
+}
+
+.error {
+  margin-bottom: 10px;
+  color: #a20606;
+}
+
+.container {
+  background: white;
+  margin: 20px auto;
+  width: 100%;
+  max-width: 700px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.btn,
+.small-btn {
+  background: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 300ms ease;
+}
+
+.btn {
+  width: 80px;
+  height: 45px;
+}
+  
+.small-btn {
+  width: 40px;
+  height: 22px;
+}
+
+.btn:hover,
+.small-btn:hover {
+  background: rgb(80, 135, 255);
+}
+
+.btn a {
+  display: block;
+  line-height: 45px;
+}
+
+.small-btn:hover.danger {
+  background: rgb(255, 64, 64);
+}
+
+.hide {
+  display: none;
+}
+
+.form_input.nickname,
+.form_input.content,
+.btn,
+.small-btn {
+  border: 1px solid #c2dffb;
+}
+
+/* Form Styling */
+.form_label,
+.form_input.content {
+  display: block;
+  margin: 10px 0;
+}
+
+.form_input.nickname,
+.form_input.content {
+  padding: 4px;
+  font-size: 16px;
+}
+
+.form_input.content {
+  width: 80%;
+  min-height: 80px;
+  resize: vertical;
+}
+/* Form Styling */
+
+/* Comments and Users Styling */
+.comment,
+.user {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.comment_avatar,
+.user_avatar {
+  background: #e4f0fb;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.comment_body {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.comment_info,
+.comment_content {
+  line-height: 25px;
+  font-size: 14px;
+}
+
+.comment_name,
+.user_name {
+  color: #5c9edc;
+}
+
+.comment_created-at,
+.user_created-at {
+  color: #a0a0a0;
+}
+
+.comment_content {
+  white-space: pre-line;
+}
+
+.user {
+  align-items: center;
+}
+
+.user_info {
+  flex: 1;
+  display: flex;
+  gap: 2rem;
+}
+
+.user_info *:not(select):not(button) {
+  flex: 1;
+}
+
+.user_authority {
+  flex: 0 0 50px;
+}
+
+.user_created-at {
+  text-align: right;
+  line-height: 22px;
+}
+/* Comments and Users Styling */
+
+/* Pagination Styling */
+.pagination {
+  text-align: center;
+}
+
+.pagination p {
+  margin: 10px;
+}
+/* Pagination Styling */
