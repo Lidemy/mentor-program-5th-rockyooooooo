@@ -139,7 +139,7 @@
       $result = $stmt->get_result();
       $row = $result->fetch_assoc();
       $count = $row['count'];
-      $totalPage = intval(ceil($count / $commentsLimit)); // ceil() 回傳的是 float 型態，先轉換成 int
+      $totalPage = intval(ceil($count / $commentsLimit)) ?: 1; // ceil() 回傳的是 float 型態，先轉換成 int，如果算出來是 0，則設為 1
     ?>  
     <section class="pagination">
       <p>共有 <?php echo $count ?> 筆留言，頁數：<?php echo $page ?> / <?php echo $totalPage ?></p>
