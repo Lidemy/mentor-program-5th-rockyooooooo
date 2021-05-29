@@ -5,6 +5,11 @@
   font-family: sans-serif;
 }
 
+a {
+  text-decoration: none;
+  color: #000000;
+}
+
 .container {
   background: #ffffff;
   margin: -3.125rem auto 6.625rem;
@@ -29,10 +34,13 @@
   color: #ffffff;
 }
 
+.error {
+  color: red;
+}
+
 /* Header Styling */
 header {
   display: flex;
-  /* width: 100vw; */
   height: 5rem;
   justify-content: space-around;
   align-items: center;
@@ -40,6 +48,7 @@ header {
 
 .header__logo {
   font-size: 1.75rem;
+  font-weight: bold;
   color: #333333;
 }
 
@@ -49,7 +58,6 @@ header {
   width: 6.25rem;
   padding: 1rem;
   color: #787878;
-  text-decoration: none;
   text-align: center;
 }
 
@@ -97,6 +105,7 @@ header {
 }
 
 .post__title {
+  flex: 1;
   font-size: 1rem;
 }
 
@@ -128,27 +137,31 @@ header {
   margin-left: 0.75rem;
 }
 
+.post__preview,
 .post__content {
-  margin-bottom: 1.625rem;
-  padding-top: 0.375rem;
+  margin: 1rem 0 1.625rem;
+  white-space: pre-line;
+  line-height: 1.5rem;
 }
 
-.post__content p {
-  margin: 0.625rem 0;
+.post__preview {
+  max-height: 15rem;
+  overflow: hidden;
 }
 
-.post__read-more-btn {
-  background: #ffffff;
+.post__read-more-btn,
+.post__back-btn {
+  display: inline-block;
   border: solid 1px #737373;
   padding: 0.75rem 1rem;
   font-size: 0.875rem;
+  color: #000000;
 }
 /* Post Styling */
 
 /* Footer Styling */
 footer {
   background: #000000;
-  /* width: 100vw; */
   line-height: 35px;
   text-align: center;
   font-size: 0.875rem;
@@ -157,21 +170,6 @@ footer {
 /* Footer Styling */
 
 /* Login Styling */
-.login__container {
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-}
-
-.login__card {
-  width: 90vw;
-  max-width: 33rem;
-  border: solid 1px #000000;
-}
-
 .login__title {
   margin-top: 4.5rem;
   margin-bottom: 2.75rem;
@@ -181,38 +179,39 @@ footer {
 }
 
 .login__form {
-  padding: 0 4rem;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .login__label {
   position: relative;
-  left: 1.25rem;
+  left: -8.75rem;
   margin: 1rem 0;
   font-size: 0.875rem;
 }
 
 .login__input {
-  max-width: 25rem;
-  height: 2.5rem;
   margin-bottom: 0.5rem;
   padding: 0.25rem;
+  max-width: 25rem;
+  width: 100%;
+  height: 2.5rem;
   font-size: 1.25rem;
 }
 
 .login__btn {
   background: #000000;
-  margin-top: 4rem;
-  margin-bottom: 8rem;
+  margin: 4rem 0 8rem;
   border: none;
   max-width: 25rem;
+  width: 100%;
   height: 3.5rem;
   color: #fffefe;
 }
 /* Login Styling */
 
-/* New Post Styling */
+/* New Post and Edit Post Styling */
 .new-post__title {
   font-size: 1.25rem;
 }
@@ -221,7 +220,7 @@ footer {
   text-align: right;
 }
 
-.new-post__form > * {
+.new-post__form > *:not(.error) {
   margin-top: 1.5rem;
   font-size: 0.875rem;
 }
@@ -251,20 +250,25 @@ footer {
   resize: vertical;
 }
 
-.new-post__btn {
+.submit-post__btn {
   border: solid 1px #737373;
   padding: 0.875rem 2.5rem;
   font-size: 0.875rem;
 }
 /* New Post Styling */
 
-/* Dashboard Styling */
+/* Dashboard and List Styling */
 .dashboard-post {
   border-bottom: 1px solid #9a9a9a;
   padding: 1.25rem 1.875rem 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  transition: background 500ms ease, color 500ms ease;
+}
+
+.dashboard-post:first-child {
+  border-top: 1px solid #9a9a9a;
 }
 
 .dashboard-post__title {
@@ -280,6 +284,13 @@ footer {
   flex: 1;
 }
 /* Dashboard Styling */
+
+/* List Styling */
+a.dashboard-post:hover {
+  background: #787878;
+  color: #ffffff;
+}
+/* List Styling */
 
 /* RWD Styling */
 @media (max-height: 600px) {
