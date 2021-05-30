@@ -236,18 +236,18 @@ footer {
   height: 2.5rem;
 }
 
-.new-post__input,
-.new-post__textarea {
+.new-post__input {
   border: solid 1px #d7d7d7;
 }
 
 .new-post__select {
   background: #eeeeee;
+  margin-bottom: 1.5rem;
   border: none;
 }
 
-.new-post__textarea {
-  resize: vertical;
+.ck-editor__editable_inline {
+  min-height: 16.75rem;
 }
 
 .submit-post__btn {
@@ -289,6 +289,10 @@ footer {
 a.dashboard-post:hover {
   background: #787878;
   color: #ffffff;
+}
+
+a.dashboard-post:hover .dashboard-post__created-at {
+  color: #d7d7d7;
 }
 /* List Styling */
 

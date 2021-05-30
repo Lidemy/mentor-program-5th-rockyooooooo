@@ -33,7 +33,7 @@
           <option value="">請輸入文章分類</option>
           <option value="announcement">歷史公告</option>
         </select>
-        <textarea class="new-post__textarea" name="content" id="content" rows="10"></textarea>
+        <textarea id="editor" class="new-post__textarea" name="content" id="content" rows="10"></textarea>
         <?php
           if (!empty($_GET['errCode'])) {
             if ($_GET['errCode'] === '1') {
@@ -47,5 +47,13 @@
     </article>
   </section>
   <?php include('./views/footer.php') ?>
+  <script src="https://cdn.ckeditor.com/ckeditor5/27.1.0/classic/ckeditor.js"></script>
+  <script>
+    ClassicEditor
+      .create( document.querySelector( '#editor' ) )
+      .catch( error => {
+        console.error( error );
+      });
+  </script>
 </body>
 </html>

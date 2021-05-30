@@ -23,6 +23,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Allen's Blog</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="content-styles.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
 <body>
@@ -41,7 +42,7 @@
           <span class="material-icons-outlined">watch_later</span><?php echo $row['created_at'] ?>
           <span class="material-icons-outlined">folder</span><?php echo $row['category'] ?>
         </div>
-        <p class="post__preview"><?php echo $row['content'] ?></p>
+        <div class="post__preview ck-content"><?php echo $row['content'] ?></div>
         <a class="post__read-more-btn btn" href="post.php?id=<?php echo $row['id'] ?>">READ MORE</a>
       </article>
     <?php } ?>
