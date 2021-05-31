@@ -1,6 +1,7 @@
 <?php
   session_start();
   require_once('conn.php');
+  require_once('utils.php');
 
   $indexUrl = 'Location: index.php';
 
@@ -46,7 +47,7 @@
   <section class="container">
     <article class="post card">
       <div class="post__header">
-        <h3 class="post__title"><?php echo $row['title'] ?></h3>
+        <h3 class="post__title"><?php echo htmlentities($row['title']) ?></h3>
         <?php if (!empty($_SESSION['username'])) { ?>
           <div class="post__btn-group">
             <a href="edit_post.php?id=<?php echo $row['id'] ?>" class="post__edit-btn btn">編輯</a>
@@ -60,6 +61,7 @@
       </div>
       <div class="post__content ck-content"><?php echo $row['content'] ?></div>
       <a class="post__back-btn btn" href="index.php">回首頁</a>
+      <a class="post__back-btn btn" href="list.php">回文章列表</a>
     </article>
   </section>
   <?php include('./views/footer.php') ?>

@@ -15,6 +15,7 @@ a {
   margin: -3.125rem auto 6.625rem;
   padding: 0.625rem;
   max-width: 56.25rem;
+  min-height: calc(100vh - 25.75rem); /* 100vh 扣掉 header, banner, footer 的高度，及 container 本身的 margin，總共 25.75rem */
 }
 
 .card {
@@ -142,6 +143,12 @@ header {
   margin: 1rem 0 1.625rem;
   white-space: pre-line;
   line-height: 1.5rem;
+  overflow-wrap: anywhere;
+}
+
+.post__preview *,
+.post__content * {
+  width: 95%;
 }
 
 .post__preview {
@@ -162,7 +169,7 @@ header {
 /* Footer Styling */
 footer {
   background: #000000;
-  line-height: 35px;
+  line-height: 2.25rem;
   text-align: center;
   font-size: 0.875rem;
   color: #fefefe;
@@ -295,6 +302,25 @@ a.dashboard-post:hover .dashboard-post__created-at {
   color: #d7d7d7;
 }
 /* List Styling */
+
+/* Pagination Styling */
+.pagination {
+  text-align: center;
+}
+
+.pagination * {
+  margin-top: 1rem;
+}
+
+.pagination a {
+  display: inline-block;
+  padding: 1rem;
+}
+
+.pagination p {
+  font-size: 1.125rem;
+}
+/* Pagination Styling */
 
 /* RWD Styling */
 @media (max-height: 600px) {

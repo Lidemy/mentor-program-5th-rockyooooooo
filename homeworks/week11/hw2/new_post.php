@@ -31,7 +31,10 @@
         <input class="new-post__input" type="text" name="title" placeholder="請輸入文章標題">
         <select class="new-post__select" name="category" id="category">
           <option value="">請輸入文章分類</option>
-          <option value="announcement">歷史公告</option>
+          <option value="notes">隨筆</option>
+          <option value="songs">好聽ㄉ歌</option>
+          <option value="learning">學習紀錄</option>
+          <option value="test">測試用</option>
         </select>
         <textarea id="editor" class="new-post__textarea" name="content" id="content" rows="10"></textarea>
         <?php
@@ -50,7 +53,17 @@
   <script src="https://cdn.ckeditor.com/ckeditor5/27.1.0/classic/ckeditor.js"></script>
   <script>
     ClassicEditor
-      .create( document.querySelector( '#editor' ) )
+      .create( document.querySelector( '#editor' ), {
+        toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', '|', 'undo', 'redo' ],
+        heading: {
+          options: [
+            { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+            { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+            { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+            { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
+          ]
+        }
+      })
       .catch( error => {
         console.error( error );
       });

@@ -44,7 +44,10 @@
         <input class="new-post__input" type="text" name="title" placeholder="請輸入文章標題" value="<?php echo $row['title'] ?>">
         <select class="new-post__select" name="category" id="category">
           <option value="">請輸入文章分類</option>
-          <option value="announcement" <?php echo $row['category'] === '歷史公告' ? 'selected' : '' ?>>歷史公告</option>
+          <option value="notes" <?php echo $row['category'] === '隨筆' ? 'selected' : '' ?>>隨筆</option>
+          <option value="songs" <?php echo $row['category'] === '好聽ㄉ歌' ? 'selected' : '' ?>>好聽ㄉ歌</option>
+          <option value="learning" <?php echo $row['category'] === '學習紀錄' ? 'selected' : '' ?>>學習紀錄</option>
+          <option value="test" <?php echo $row['category'] === '測試用' ? 'selected' : '' ?>>測試用</option>
         </select>
         <?php
           $row['content'] = str_replace( '&', '&amp;', $row['content'] );
@@ -70,14 +73,14 @@
       .create( document.querySelector( '#editor' ), {
         toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', '|', 'undo', 'redo' ],
         heading: {
-            options: [
-                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-                { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
-            ]
+          options: [
+            { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+            { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+            { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+            { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
+          ]
         }
-    })
+      })
       .catch( error => {
         console.error( error );
       });

@@ -22,8 +22,17 @@
   $content = $_POST['content'];
 
   switch ($_POST['category']) {
-    case 'announcement':
-      $category = '歷史公告';
+    case 'notes':
+      $category = '隨筆';
+      break;
+    case 'songs':
+      $category = '好聽ㄉ歌';
+      break;
+    case 'learning':
+      $category = '學習紀錄';
+      break;
+    case 'test':
+      $category = '測試用';
       break;
   }
   
