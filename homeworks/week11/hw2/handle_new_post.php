@@ -19,23 +19,9 @@
   }
 
   $title = $_POST['title'];
+  $category = $_POST['category'];
   $content = $_POST['content'];
 
-  switch ($_POST['category']) {
-    case 'notes':
-      $category = '隨筆';
-      break;
-    case 'songs':
-      $category = '好聽ㄉ歌';
-      break;
-    case 'learning':
-      $category = '學習紀錄';
-      break;
-    case 'test':
-      $category = '測試用';
-      break;
-  }
-  
   // 新增文章
   $sql = 'INSERT INTO allenliao_blog_articles(title, category, content) VALUES(?, ?, ?)';
   $stmt = $conn->prepare($sql);

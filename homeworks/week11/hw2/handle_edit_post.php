@@ -20,23 +20,9 @@
   }
 
   $title = $_POST['title'];
+  $category = $_POST['category'];
   $content = $_POST['content'];
   $id = $_POST['id'];
-
-  switch ($_POST['category']) {
-    case 'notes':
-      $category = '隨筆';
-      break;
-    case 'songs':
-      $category = '好聽ㄉ歌';
-      break;
-    case 'learning':
-      $category = '學習紀錄';
-      break;
-    case 'test':
-      $category = '測試用';
-      break;
-  }
 
   // 更新文章
   $sql = 'UPDATE allenliao_blog_articles SET title = ?, category = ?, content = ? WHERE id = ?';

@@ -15,16 +15,7 @@
   $result = $stmt->get_result();
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Allen's Blog - Dashboard</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-</head>
+<?php include_once('./views/html_head.php') ?>
 <body>
   <?php include_once('./views/header.php') ?>
   <?php include_once('./views/banner.php') ?>
@@ -32,8 +23,8 @@
     <div class="card">
       <?php while ($row = $result->fetch_assoc()) { ?>
         <a class="dashboard-post" href="post.php?id=<?php echo $row['id'] ?>">
-          <h3 class="dashboard-post__title"><?php echo htmlentities($row['title']) ?></h3>
-          <span class="dashboard-post__created-at"><?php echo $row['created_at'] ?></span>
+          <h3 class="dashboard-post__title"><?php echo htmlspecialchars($row['title']) ?></h3>
+          <span class="dashboard-post__created-at"><?php echo htmlspecialchars($row['created_at']) ?></span>
         </a>
       <?php } ?>
       <?php

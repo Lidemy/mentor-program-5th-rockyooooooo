@@ -1,5 +1,6 @@
 <?php
   session_start();
+  require_once('conn.php');
   require_once('utils.php');
 
   $indexUrl = 'Location: index.php';
@@ -9,21 +10,21 @@
     header($indexUrl);
     die();
   }
+
+  // 取得分類資料
+  $sql = 'SELECT name FROM allenliao_blog_categories';
+  $stmt = $conn->prepare($sql);
+  $result = $stmt->execute();
+  if (!$result) {
+    die('資料獲取失敗' . $conn->error);
+  }
+  $result = $stmt->get_result();
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Allen's Blog - New Post</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-</head>
+<?php include_once('./views/html_head.php') ?>
 <body>
-  <?php include('./views/header.php') ?>
-  <?php include('./views/banner.php') ?>
+  <?php include_once('./views/header.php') ?>
+  <?php include_once('./views/banner.php') ?>
   <section class="container">
     <article class="card">
       <h2 class="new-post__title">發表文章：</h2>
@@ -31,10 +32,11 @@
         <input class="new-post__input" type="text" name="title" placeholder="請輸入文章標題">
         <select class="new-post__select" name="category" id="category">
           <option value="">請輸入文章分類</option>
-          <option value="notes">隨筆</option>
-          <option value="songs">好聽ㄉ歌</option>
-          <option value="learning">學習紀錄</option>
-          <option value="test">測試用</option>
+          <?php while ($row = $result->fetch_assoc()) { ?>
+            <option value="<?php echo $row['name'] ?>">
+              <?php echo $row['name'] ?>
+            </option>
+          <?php } ?>
         </select>
         <textarea id="editor" class="new-post__textarea" name="content" id="content" rows="10"></textarea>
         <?php
@@ -49,24 +51,8 @@
       </form>
     </article>
   </section>
-  <?php include('./views/footer.php') ?>
+  <?php include_once('./views/footer.php') ?>
   <script src="https://cdn.ckeditor.com/ckeditor5/27.1.0/classic/ckeditor.js"></script>
-  <script>
-    ClassicEditor
-      .create( document.querySelector( '#editor' ), {
-        toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', '|', 'undo', 'redo' ],
-        heading: {
-          options: [
-            { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-            { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-            { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-            { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
-          ]
-        }
-      })
-      .catch( error => {
-        console.error( error );
-      });
-  </script>
+  <script src="./public/javascripts/ckeditor.js"></script>
 </body>
 </html>

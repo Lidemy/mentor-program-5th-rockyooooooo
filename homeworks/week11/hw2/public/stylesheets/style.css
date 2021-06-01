@@ -10,6 +10,12 @@ a {
   color: #000000;
 }
 
+/* li 元素的前綴會超出容器，向右移 1rem */
+li {
+  position: relative;
+  left: 1rem;
+}
+
 .container {
   background: #ffffff;
   margin: -3.125rem auto 6.625rem;
@@ -339,6 +345,10 @@ a.dashboard-post:hover .dashboard-post__created-at {
 .about-me {
   text-align: center;
 }
+
+.about-me img {
+  width: 100%;
+}
 /* About me Styling */
 
 /* RWD Styling */
@@ -378,7 +388,7 @@ a.dashboard-post:hover .dashboard-post__created-at {
     box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.3);
     max-height: 0;
     overflow: hidden;
-    transition: all 500ms ease;
+    transition: max-height 500ms ease;
   }
 
   .header__nav.show {
