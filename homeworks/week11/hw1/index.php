@@ -8,7 +8,7 @@
   // 檢查 session
   if (!empty($_SESSION['username'])) {
     $username = $_SESSION['username'];
-  
+
     // 取得 users 資料
     $sql = 'SELECT nickname, authority FROM allenliao_board_users WHERE username = ?';
     $stmt = $conn->prepare($sql);
@@ -31,18 +31,28 @@
   $offset = ($page - 1) * $commentsLimit;
 
   // 取得 comments 資料
-  $sql = 'SELECT '.
-    'C.id AS id, '.
-    'U.username AS username, '.
-    'U.nickname AS nickname, '.
-    'C.created_at AS created_at, '.
-    'C.content AS content '.
-    'FROM allenliao_board_comments AS C '.
-    'LEFT JOIN allenliao_board_users AS U '.
-    'ON C.username = U.username '.
-    'WHERE C.is_deleted IS NULL '.
-    'ORDER BY C.id DESC '.
-    'LIMIT ? OFFSET ?';
+  $sql = 
+    'SELECT 
+      C.id AS id, 
+      U.username AS username, 
+      U.nickname AS nickname, 
+      C.created_at AS created_at, 
+      C.content AS content 
+    FROM 
+      allenliao_board_comments AS C 
+    LEFT JOIN 
+      allenliao_board_users AS U 
+    ON 
+      C.username = U.username 
+    WHERE 
+      C.is_deleted IS NULL 
+    ORDER BY 
+      C.id 
+    DESC 
+    LIMIT 
+      ? 
+    OFFSET 
+      ?';
   $stmt = $conn->prepare($sql);
   $stmt->bind_param('ii', $commentsLimit, $offset);
   $result = $stmt->execute();

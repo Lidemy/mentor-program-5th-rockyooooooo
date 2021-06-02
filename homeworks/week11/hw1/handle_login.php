@@ -3,7 +3,7 @@
   require_once('conn.php');
 
   $loginUrl = 'Location: login.php';
-  
+
   $username = $_POST['username'];
   $password = $_POST['password'];
 

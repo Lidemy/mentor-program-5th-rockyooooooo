@@ -26,13 +26,6 @@
     die('資料獲取失敗<br>' . $conn->error);
   }
   $result = $stmt->get_result();
-
-  $page = 1;
-  if (!empty($_GET['page'])) {
-    $page = intval($_GET['page']);
-  }
-  $commentsLimit = 5;
-  $offset = ($page - 1) * $commentsLimit;
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +43,7 @@
   </header>
   <main class="container">
     <section>
-      <h1>管理權限
+      <h1>管理使用者
         <button class="btn"><a href="index.php">回留言板</a></button>
       </h1>
     </section>

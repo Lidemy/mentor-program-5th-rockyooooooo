@@ -2,13 +2,15 @@
   session_start();
   require_once('conn.php');
   require_once('utils.php');
-  
+
+  $indexUrl = 'Location: index.php';
+
   // 檢查 url 是否有帶 id
   if (empty($_GET['id'])) {
-    header('Location: index.php');
+    header($indexUrl);
     die();
   }
-  
+
   $username = $_SESSION['username'];
   $id = $_GET['id'];
 
@@ -22,11 +24,11 @@
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('is', $id, $username);
   }
-  
+
   $result = $stmt->execute();
   if (!$result) {
     die('資料刪除失敗<br>' . $conn->error);
   }
 
-  header('Location: index.php');
+  header($indexUrl);
 ?>

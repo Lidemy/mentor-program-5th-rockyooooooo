@@ -9,6 +9,7 @@
   $username = $_SESSION['username'];
   if (checkAuthority($username) !== 'admin') {
     header($indexUrl);
+    die();
   }
 
   $authority = $_POST['authority'];

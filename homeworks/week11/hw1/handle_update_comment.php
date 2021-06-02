@@ -2,7 +2,7 @@
   session_start();
   require_once('conn.php');
   require_once('utils.php');
-  
+
   $username = $_SESSION['username'];
   $content = $_POST['content'];
   $id = $_POST['id'];

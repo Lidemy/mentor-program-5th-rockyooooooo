@@ -188,3 +188,14 @@ a {
   margin: 10px;
 }
 /* Pagination Styling */
+
+@media (max-width: 600px) {
+  .user {
+    flex-direction: column;
+  }
+
+  .user_info {
+    flex-direction: column;
+    align-items: center;
+  }
+}
