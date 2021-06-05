@@ -44,19 +44,19 @@
       const commentsDOM = $('.comments')
       const limit = 5
       let offset = 0
-      let totalComments = 0
+      let numberOfComments = 0
 
       // get comments from database
       getComments(limit, offset, (data) => {
         const { discussions, count } = data
-        totalComments = count
+        numberOfComments = count
         for (const comment of discussions) appendCommentToDOM(commentsDOM, comment)
 
-        if (offset >= totalComments - limit) {
+        // check offset and total amount of comments to hide the more comments button
+        if (offset >= numberOfComments - limit) {
           $('.more-comments-btn').hide()
         }
       })
-
 
       $('.add-comment-form').submit((e) => {
         e.preventDefault()
@@ -82,14 +82,20 @@
         // empty the input fields
         $('input[name=nickname]').val('')
         $('textarea[name=content]').val('')
+
+        // increase offset and numberOfComments
+        offset++
+        numberOfComments++
       })
 
       $('.more-comments-btn').click((e) => {
         offset += limit
-        if (offset >= totalComments - limit) {
+        // check offset and total amount of comments to hide the more comments button
+        if (offset >= numberOfComments - limit) {
           $(e.target).hide()
         }
 
+        // get more comments from database
         getComments(limit, offset, (data) => {
           const { discussions } = data
           for (const comment of discussions) appendCommentToDOM(commentsDOM, comment)
