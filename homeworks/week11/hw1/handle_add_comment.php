@@ -1,11 +1,12 @@
 <?php
   session_start();
   require_once('conn.php');
+  require_once('utils.php');
 
   $indexUrl = 'Location: index.php';
 
-  // 檢查 session，避免使用者直接修改 url 來進入這裡（雖然沒關係，但 url 會多了 `?errCode=1`）
-  if (empty($_SESSION['username'])) {
+  // 檢查 session，避免使用者直接修改 url 來進入這裡（雖然沒關係，但 url 會多了 `?errCode=1`），並檢查 user 是否被停權
+  if (empty($_SESSION['username']) || checkAuthority($_SESSION['username']) === 'disabled_user') {
     header($indexUrl);
     die();
   }
