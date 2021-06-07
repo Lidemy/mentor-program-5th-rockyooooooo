@@ -4,6 +4,10 @@
   header("Content-type:application/json;charset=utf-8");
   header("Access-Control-Allow-Origin: *");
 
+  if (empty($_POST["todo_list"])) {
+    die();
+  }
+
   $todo_list = $_POST["todo_list"];
 
   $token = "";
@@ -27,10 +31,17 @@
   $stmt->bind_param("ss", $todo_list, $token);
   $result = $stmt->execute();
   if (!$result) {
-    $json = array(
-      "ok" => false,
-      "message" => "Storing Failed!"
-    );
+    if ($conn->errno === 1062) {
+      $json = array(
+        "ok" => false,
+        "message" => "請再試一次！"
+      );
+    } else {
+      $json = array(
+        "ok" => false,
+        "message" => "儲存失敗！"
+      );
+    }
 
     $response = json_encode($json);
     echo $response;
@@ -39,7 +50,7 @@
 
   $json = array(
     "ok" => true,
-    "message" => "Success!"
+    "token" => $token
   );
 
   $response = json_encode($json);

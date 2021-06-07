@@ -8,39 +8,68 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .card {
+      width: 600px;
+    }
+
+    .todo__list {
+      height: 400px;
+      overflow: auto;
+    }
+
+    .todo__item:last-child {
+      border-bottom: 1px solid rgba(0, 0, 0, .125)!important;
+    }
+  </style>
 </head>
 <body>
   <div class="container min-vh-100 d-flex justify-content-center align-items-center">
     <div class="card">
       <div class="card-header">
-        <h1>Todo List</h1>
+        <h1 class="text-center">Todo List</h1>
         <form class="new-todo-form">
-          <div class="input-group">
+          <div class="input-group justify-content-center">
             <div class="form-floating">
               <input type="text" class="form-control" id="new-todo" placeholder="todo">
               <label for="new-todo">Something to do...</label>
             </div>
-            <button class="btn btn-primary d-flex align-items-center"><span class="material-icons-outlined">add</span></button>
+            <button class="btn btn-primary btn-lg d-flex align-items-center"><span class="material-icons-outlined">add</span></button>
           </div>
         </form>
       </div>
       <ul class="todo__list list-group list-group-flush">
       </ul>
-      <div class="card-footer d-flex gap-2">
-        <p><span class="task-left"></span> tasks left</p>
+      <div class="card-footer d-flex justify-content-between">
         <div class="task-filter btn-group">
           <button class="task-all btn btn-primary btn-sm">All</button>
-          <button class="task-active btn btn-outline-primary btn-sm d-flex align-items-center"><span class="material-icons-outlined">check_box_outline_blank</span></button>
-          <button class="task-completed btn btn-outline-primary btn-sm d-flex align-items-center"><span class="material-icons-outlined">check_box</span></button>
+          <button class="task-active btn btn-outline-primary btn-sm d-flex align-items-center">
+            <span class="material-icons-outlined">check_box_outline_blank</span>
+          </button>
+          <button class="task-completed btn btn-outline-primary btn-sm d-flex align-items-center">
+            <span class="material-icons-outlined">check_box</span>
+          </button>
+        </div>
+        <div class="row align-items-center">
+          <span class="task-left material-icons-outlined col">filter_none</span>
         </div>
         <div class="btn-group">
-          <button class="task-delete-completed btn btn-outline-danger btn-sm d-flex align-items-center"><span class="material-icons-outlined">remove_done</span></button>
-          <button class="save-all btn btn-outline-primary btn-sm d-flex align-items-center"><span class="material-icons-outlined">cloud_upload</span></button>
+          <button class="task-delete-completed btn btn-outline-danger btn-sm d-flex align-items-center">
+            <span class="material-icons-outlined">remove_done</span>
+          </button>
+          <button class="save-all btn btn-outline-primary btn-sm d-flex align-items-center">
+            <span class="material-icons-outlined">cloud_upload</span>
+          </button>
+          <button class="restore-todos btn btn-outline-success btn-sm d-flex align-items-center">
+            <span class="material-icons-outlined">restore</span>
+          </button>
         </div>
       </div>
     </div>
   </div>
   <script>
+    const BASE_URL = './'
+    // 紀錄現在的 filter 在哪個 tag
     let taskFilterStatus = 'all'
 
     function escapeHtml(unsafe) {
@@ -60,18 +89,23 @@
     }
 
     function appendTodoToDOM(todoContent, isChecked = false) {
+      // 用一串隨機的數字來給 label 跟 input 一個"不容易"重複的 id
       const randomID = Math.floor((Math.random() * 100000000) + 1)
 
       const todoHTML = `
-        <li class="todo__item list-group-item d-flex justify-content-between align-items-center text-wrap text-break">
+        <li class="todo__item list-group-item d-flex justify-content-between align-items-center gap-2 text-wrap text-break">
           <div class="todo__body d-flex align-items-center gap-2 flex-grow-1">
             <input ${isChecked ? 'checked' : ''} class="todo__check form-check-input flex-shrink-0" type="checkbox" value="" id="${randomID}">
             <label class="todo__content flex-grow-1 ${isChecked ? 'text-decoration-line-through text-muted' : ''}" for="${randomID}">${escapeHtml(todoContent)}</label>
-            <input class="todo__new-content d-none" type="text" value="${todoContent}">
+            <textarea class="todo__new-content w-100 d-none">${todoContent}</textarea>
           </div>
           <div class="todo__controll btn-group flex-shrink-0">
-            <button class="todo__edit btn btn-light btn-sm border d-flex align-items-center"><span class="material-icons-outlined">edit</span></button>
-            <button class="todo__delete btn btn-secondary btn-sm d-flex align-items-center"><span class="material-icons-outlined">delete</span></button>
+            <button class="todo__edit btn btn-light btn-sm border d-flex align-items-center">
+              <span class="material-icons-outlined">edit</span>
+            </button>
+            <button class="todo__delete btn btn-secondary btn-sm d-flex align-items-center">
+              <span class="material-icons-outlined">delete</span>
+            </button>
           </div>
         </li>
       `
@@ -79,26 +113,53 @@
       $('.todo__list').append(todoHTML)
     }
 
-    // 獲取 todolist
-    $.ajax({
-      type: 'GET',
-      url: 'http://localhost/allenliao/week12/hw2/handle_restore_todolist.php',
-      success: function(resp) {
-        if (!resp.ok) return alert(resp.message);
+    function renewNumberOfUndoneTodos() {
+      const numberOfUndoneTodos = $('.todo__check:not(:checked)').length
+      let text = ''
 
-        const todolist = $.parseJSON(resp.todolist)
-        $(todolist).each(function(index, todoItem) {
-          const { todo, checked } = todoItem
-          appendTodoToDOM(todo, checked)
-        })
+      if (numberOfUndoneTodos === 0) text = 'filter_none'
+      else if (numberOfUndoneTodos > 9) text = 'filter_9_plus'
+      else text = `filter_${numberOfUndoneTodos}`
 
-        // 將未完成的 todo 數量放到 task-left 裡，新增、刪除、標記完成 / 未完成，也都會執行
-        $('.task-left').text($('.todo__check:not(:checked)').length)
-      },
-      error: function(err) {
-        console.log('jquery ajax error')
-      }
-    });
+      $('.task-left').text(text)
+    }
+
+    function getTodoList(token = null) {
+      const data = { token }
+
+      $.ajax({
+        type: 'POST',
+        url: `${BASE_URL}api_todolist.php`,
+        data,
+        success: function(resp) {
+          if (!resp.ok) return alert(resp.message)
+          if (!resp.todolist) alert('找不到資料')
+
+          let todolist = null
+          try {
+            todolist = $.parseJSON(resp.todolist)
+          } catch(err) {
+            console.log(err.message)
+          }
+          $('.todo__list').empty()
+          $(todolist).each(function(index, todoItem) {
+            const { todo, isChecked } = todoItem
+            appendTodoToDOM(todo, isChecked)
+          })
+
+          // 計算未完成的 todo 數量，並放到 task-left 裡，新增、刪除、標記完成 / 未完成，也都會執行
+          renewNumberOfUndoneTodos()
+
+          if(token) alert("匯入成功！")
+        },
+        error: function(err) {
+          console.log('jquery ajax error')
+        }
+      });
+    }
+
+    // 載入頁面先抓一次 todolist
+    getTodoList()
 
     // 新增 todo
     $('.new-todo-form').submit((e) => {
@@ -109,14 +170,14 @@
       appendTodoToDOM(newTodoContent)
 
       $('#new-todo').val('')
-      $('.task-left').text($('.todo__check:not(:checked)').length)
+      renewNumberOfUndoneTodos()
     })
 
     // 刪除 todo
     $('.todo__list').on('click', '.todo__delete', (e) => {
-      $(e.target).parent().parent().fadeOut(() => {
-        $(e.target).parent().parent().remove()
-        $('.task-left').text($('.todo__check:not(:checked)').length)
+      $(e.target).closest('.todo__item').fadeOut(() => {
+        $(e.target).closest('.todo__item').remove()
+        renewNumberOfUndoneTodos()
       })
     })
 
@@ -128,8 +189,13 @@
 
       if (todoItem.hasClass('edit-mode')) {
         todoContent.text(todoNewContent.val())
+
+        $(e.target).hasClass('material-icons-outlined') ?
+        $(e.target).text('edit') :
         $(e.target).html('<span class="material-icons-outlined">edit</span>')
       } else {
+        $(e.target).hasClass('material-icons-outlined') ?
+        $(e.target).text('save') :
         $(e.target).html('<span class="material-icons-outlined">save</span>')
       }
 
@@ -143,7 +209,7 @@
       $(e.target).next().toggleClass('text-decoration-line-through text-muted')
       if (taskFilterStatus === 'active' && $(e.target).is(':checked')) $(e.target).closest('.todo__item').addClass('d-none')
       if (taskFilterStatus === 'completed' && $(e.target).is(':not(:checked)')) $(e.target).closest('.todo__item').addClass('d-none')
-      $('.task-left').text($('.todo__check:not(:checked)').length)
+        renewNumberOfUndoneTodos()
     })
 
     // 篩選 todos
@@ -170,7 +236,7 @@
       })
       taskFilterStatus = 'completed'
     })
-    
+
     // 刪除已完成 todos
     $('.task-delete-completed').click(() => {
       $('.todo__item').each(function() {
@@ -182,12 +248,13 @@
 
     // 儲存 todos
     $('.save-all').click(() => {
+      if (!confirm('確定要儲存嗎？會覆蓋之前的紀錄')) return
       const todoList = []
 
       $('.todo__item').each(function() {
         todoList.push({
           todo: $(this).find('.todo__content').text(),
-          checked: $(this).find('.todo__check:checked').length
+          isChecked: $(this).find('.todo__check:checked').is(':checked')
         })
       })
 
@@ -196,12 +263,21 @@
       }
       $.ajax({
         type: 'POST',
-        url: 'http://localhost/allenliao/week12/hw2/handle_save_todolist.php',
+        url: `${BASE_URL}api_save_todolist.php`,
         data
       }).done((data) => {
-        if(!data.ok) return alert(data.message)
-        alert('儲存成功！')
+        if (!data.ok) return alert(data.message)
+        alert(`儲存成功！請妥善保管你的 token：${data.token}`)
       });
+    })
+
+    // 匯入之前的 todolist
+    $('.restore-todos').click(() => {
+      if (!confirm('確定要匯入嗎？目前的 todolist 會被清空')) return
+      const token = prompt('請輸入你的 token')
+      if (token === '') return alert('請輸入 token')
+      if (!token) return
+      getTodoList(token)
     })
   </script>
 </body>
