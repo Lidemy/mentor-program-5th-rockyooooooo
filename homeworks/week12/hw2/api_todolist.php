@@ -10,42 +10,52 @@
     array_push(
       $defaultTodoList,
       array(
+        "id" => 1,
         "todo" => "左下按鈕說明",
         "isChecked" => true
       ),
       array(
+        "id" => 2,
         "todo" => "顯示全部 / 完成 / 未完成任務",
         "isChecked" => false
       ),
       array(
+        "id" => 3,
         "todo" => "右下按鈕說明",
         "isChecked" => true
       ),
       array(
+        "id" => 4,
         "todo" => "紅色按鈕為刪除已完成任務",
         "isChecked" => false
       ),
       array(
+        "id" => 5,
         "todo" => "藍色按鈕為儲存 todolist",
         "isChecked" => false
       ),
       array(
+        "id" => 6,
         "todo" => "綠色按鈕為匯入 todolist",
         "isChecked" => false
       ),
       array(
+        "id" => 7,
         "todo" => "儲存及匯入功能說明",
         "isChecked" => true
       ),
       array(
+        "id" => 8,
         "todo" => "todolist 儲存後會有一組 token，可用這組 token 匯入 todolist",
         "isChecked" => false
       ),
       array(
+        "id" => 9,
         "todo" => "中下圖示說明",
         "isChecked" => true
       ),
       array(
+        "id" => 10,
         "todo" => "顯示目前未完成任務數量，最多顯示到 9，超過 9 顯示 9+",
         "isChecked" => false
       )
