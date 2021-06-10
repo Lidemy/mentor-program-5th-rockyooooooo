@@ -1,0 +1,77 @@
+/* Header Styling */
+header {
+  display: flex;
+  height: 5rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.header {
+  &__logo {
+    font-size: $font-xl;
+    font-weight: bold;
+    color: $black-logo;
+  }
+
+  &__nav {
+    margin-left: 1rem;
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__navbar a,
+  &__controller a{
+    display: inline-block;
+    width: 6.25rem;
+    padding: 1rem;
+    color: $grey-02;
+    text-align: center;
+
+    & + a {
+      margin-left: 0.25rem;
+    }
+  }
+}
+
+span.hamburger {
+  display: none;
+  cursor: pointer;
+}
+/* Header Styling */
+
+/* Banner Styling */
+.banner {
+  background: linear-gradient(to bottom, $black-pure, $black-banner);
+  height: 15rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: $grey-06;
+
+  &__container {
+    transform: translateY(-30%);
+  }
+
+  &__title {
+    font-size: $font-xl;
+    margin-bottom: 1.625rem;
+  }
+
+  &__description {
+    font-size: $font-sm;
+  }
+}
+/* Banner Styling */
+
+/* Footer Styling */
+footer {
+  background: $black-pure;
+  line-height: 2.25rem;
+  text-align: center;
+  font-size: $font-sm;
+  color: $white-pure;
+}
+/* Footer Styling */
