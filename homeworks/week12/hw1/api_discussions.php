@@ -22,8 +22,9 @@
   $offset = $_GET["offset"];
 
   // 取得 discussions 數量
-  $sql = "SELECT COUNT(id) AS count FROM allenliao_discussions";
+  $sql = "SELECT COUNT(id) AS count FROM allenliao_discussions WHERE site_key = ?";
   $stmt = $conn->prepare($sql);
+  $stmt->bind_param('s', $site_key);
   $result = $stmt->execute();
   if (!$result) {
     $json = array(
