@@ -2,14 +2,27 @@
 
 import { getComments, addComment } from './api'
 import { appendCommentToDOM } from './utils'
-import { commentsTemplate } from './templates'
+import { getCommentsTemplate, createClassnamesAndIDs } from './templates'
 
 export function init(options) {
   const { siteKey, apiUrl, containerSelector } = options
 
+  const {
+    addCommentFormClassname,
+    commentsClassname,
+    moreCommentsBtnClassname,
+    floatingInputID,
+    floatingTextareaID
+  } = createClassnamesAndIDs(siteKey)
+
+  const addCommentFormSelector = `.${addCommentFormClassname}`
+  const commentsSelector = `.${commentsClassname}`
+  const moreCommentsBtnSelector = `.${moreCommentsBtnClassname}`
+
+  const commentsTemplate = getCommentsTemplate(siteKey)
   $(containerSelector).append(commentsTemplate)
 
-  const commentsDOM = $('.comments')
+  const commentsDOM = $(commentsSelector)
   const limit = 5
   let offset = 0
   let numberOfComments = 0
@@ -22,17 +35,19 @@ export function init(options) {
 
     // check offset and total amount of comments to hide the more comments button
     if (offset >= numberOfComments - limit) {
-      $('.more-comments-btn').hide()
+      $(moreCommentsBtnSelector).hide()
     }
   })
 
-  $('.add-comment-form').submit((e) => {
+  $(addCommentFormSelector).submit((e) => {
     e.preventDefault()
 
+    const nicknameSelector = `${addCommentFormSelector} input[name=nickname]`
+    const contentSelector = `${addCommentFormSelector} textarea[name=content]`
     const newCommentData = {
       site_key: siteKey,
-      nickname: $('input[name=nickname]').val(),
-      content: $('textarea[name=content]').val()
+      nickname: $(nicknameSelector).val(),
+      content: $(contentSelector).val()
     }
 
     // insert new comment to database
@@ -42,15 +57,15 @@ export function init(options) {
     })
 
     // empty the input fields
-    $('input[name=nickname]').val('')
-    $('textarea[name=content]').val('')
+    $(nicknameSelector).val('')
+    $(contentSelector).val('')
 
     // increase offset and numberOfComments
     offset++
     numberOfComments++
   })
 
-  $('.more-comments-btn').click((e) => {
+  $(moreCommentsBtnSelector).click((e) => {
     offset += limit
     // check offset and total amount of comments to hide the more comments button
     if (offset >= numberOfComments - limit) {
