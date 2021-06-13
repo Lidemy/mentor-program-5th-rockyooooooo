@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weel12 留言板</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    const BASE_URL = './'
+
+    function escapeHtml(unsafe) {
+      return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;")
+    }
+
+    function appendCommentToDOM(container, comment, isPrepend) {
+      const html = `
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">${escapeHtml(comment.nickname)}</h5>
+          <p class="card-text">${escapeHtml(comment.content)}</p>
+        </div>
+      </div>
+      `
+      isPrepend ? container.prepend(html) : container.append(html)
+    }
+
+    function getComments(limit, offset, cb) {
+      $.ajax({
+        url: `${BASE_URL}api_discussions.php?site_key=allen&limit=${limit}&offset=${offset}`
+      }).done((data) => {
+        if (!data.ok) return alert(data.message)
+        cb(data)
+      })
+    }
+
+    $(document).ready(() => {
+      const commentsDOM = $('.comments')
+      const limit = 5
+      let offset = 0
+      let numberOfComments = 0
+
+      // get comments from database
+      getComments(limit, offset, (data) => {
+        const { discussions, count } = data
+        numberOfComments = count
+        for (const comment of discussions) appendCommentToDOM(commentsDOM, comment)
+
+        // check offset and total amount of comments to hide the more comments button
+        if (offset >= numberOfComments - limit) {
+          $('.more-comments-btn').hide()
+        }
+      })
+
+      $('.add-comment-form').submit((e) => {
+        e.preventDefault()
+
+        const newCommentData = {
+          site_key: 'allen',
+          nickname: $('input[name=nickname]').val(),
+          content: $('textarea[name=content]').val()
+        }
+
+        // insert new comment to database
+        $.ajax({
+          type: 'POST',
+          url: `${BASE_URL}api_add_discussions.php`,
+          data: newCommentData
+        }).done((data) => {
+          if (!data.ok) return alert(data.message)
+
+          // append new comment to page
+          appendCommentToDOM(commentsDOM, newCommentData, true)
+        })
+
+        // empty the input fields
+        $('input[name=nickname]').val('')
+        $('textarea[name=content]').val('')
+
+        // increase offset and numberOfComments
+        offset++
+        numberOfComments++
+      })
+
+      $('.more-comments-btn').click((e) => {
+        offset += limit
+        // check offset and total amount of comments to hide the more comments button
+        if (offset >= numberOfComments - limit) {
+          $(e.target).hide()
+        }
+
+        // get more comments from database
+        getComments(limit, offset, (data) => {
+          const { discussions } = data
+          for (const comment of discussions) appendCommentToDOM(commentsDOM, comment)
+        })
+      })
+    })
+  </script>
+</head>
+<body>
+  <div class="container p-3">
+    <form class="add-comment-form mb-3 p-3 bg-light border rounded">
+      <h1>留言板</h1>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="floatingInput" placeholder="Put your nickname here" name="nickname">
+        <label for="floatingInput">暱稱</label>
+      </div>
+      <div class="form-floating mb-3">
+        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 100px" name="content"></textarea>
+        <label for="floatingTextarea">留言內容</label>
+      </div>
+      <button type="submit" class="btn btn-primary">送出</button>
+    </form>
+    <section class="comments">
+      <!-- injected by javascript -->
+    </section>
+    <button class="more-comments-btn btn btn-outline-primary">載入更多</button>
+  </div>
+</body>
+</html>

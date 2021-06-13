@@ -71,6 +71,7 @@
     const BASE_URL = './'
     // 紀錄現在的 filter 在哪個 tag
     let taskFilterStatus = 'all'
+    let todolistData = []
     let idIndex = 1
 
     function escapeHtml(unsafe) {
@@ -87,7 +88,30 @@
       $(btn).removeClass('btn-outline-primary').addClass('btn-primary')
     }
 
-    function appendTodoToDOM(id, todoContent, isChecked = false) {
+    function hideActiveTodos() {
+      $('.todo__check').closest('.todo__item').addClass('d-none')
+      $('.todo__check:checked').closest('.todo__item').removeClass('d-none')
+    }
+    function hideCompletedTodos() {
+      $('.todo__check').closest('.todo__item').removeClass('d-none')
+      $('.todo__check:checked').closest('.todo__item').addClass('d-none')
+    }
+
+    function renewNumberOfUndoneTodos() {
+      let numberOfUndoneTodos = 0
+      $.each(todolistData, (index, todoItem) => {
+        if (!todoItem.isChecked) numberOfUndoneTodos++
+      })
+      let text = ''
+
+      if (numberOfUndoneTodos === 0) text = 'filter_none'
+      else if (numberOfUndoneTodos > 9) text = 'filter_9_plus'
+      else text = `filter_${numberOfUndoneTodos}`
+
+      $('.task-left').text(text)
+    }
+
+    function appendTodoToDOM(id, todoContent, isChecked) {
       const todoHTML = `
         <li class="todo__item list-group-item d-flex justify-content-between align-items-center gap-2 text-wrap text-break">
           <div class="todo__body d-flex align-items-center gap-2 flex-grow-1">
@@ -109,15 +133,13 @@
       $('.todo__list').append(todoHTML)
     }
 
-    function renewNumberOfUndoneTodos() {
-      const numberOfUndoneTodos = $('.todo__check:not(:checked)').length
-      let text = ''
-
-      if (numberOfUndoneTodos === 0) text = 'filter_none'
-      else if (numberOfUndoneTodos > 9) text = 'filter_9_plus'
-      else text = `filter_${numberOfUndoneTodos}`
-
-      $('.task-left').text(text)
+    function reRenderTodos() {
+      $('.todo__list').empty()
+      $.each(todolistData, (index, todoItem) => {
+        const { id, todo, isChecked } = todoItem
+        appendTodoToDOM(id, todo, isChecked)
+      })
+      renewNumberOfUndoneTodos()
     }
 
     function getTodoList(token = null) {
@@ -131,24 +153,16 @@
           if (!resp.ok) return alert(resp.message)
           if (!resp.todolist) alert('找不到資料')
 
-          let todolist = null
           try {
-            todolist = $.parseJSON(resp.todolist)
+            todolistData = $.parseJSON(resp.todolist)
           } catch(err) {
             console.log(err.message)
           }
 
-          idIndex = todolist[todolist.length - 1].id + 1
-          $('.todo__list').empty()
-          $(todolist).each(function(index, todoItem) {
-            const { id, todo, isChecked } = todoItem
-            appendTodoToDOM(id, todo, isChecked)
-          })
+          idIndex = todolistData[todolistData.length - 1].id + 1
+          reRenderTodos()
 
-          // 計算未完成的 todo 數量，並放到 task-left 裡，新增、刪除、標記完成 / 未完成，也都會執行
-          renewNumberOfUndoneTodos()
-
-          if(token) alert("匯入成功！")
+          // if(token) alert("匯入成功！")
         },
         error: function(err) {
           console.log('jquery ajax error')
@@ -165,25 +179,26 @@
       const newTodoContent = $('#new-todo').val()
       if (!newTodoContent) return
 
-      appendTodoToDOM(idIndex, newTodoContent)
-
-      // 如果目前在顯示已完成任務的 filter，再次設定所有 todo 的顯示狀況
-      if (taskFilterStatus === 'completed') {
-        $('.todo__check').closest('.todo__item').addClass('d-none')
-        $('.todo__check:checked').closest('.todo__item').removeClass('d-none')
+      const newTodo = {
+        id: idIndex,
+        todo: newTodoContent,
+        isChecked: false
       }
+      todolistData.push(newTodo)
+      reRenderTodos()
+
+      if (taskFilterStatus === 'active') hideCompletedTodos()
+      if (taskFilterStatus === 'completed') hideActiveTodos()
 
       $('#new-todo').val('')
-      renewNumberOfUndoneTodos()
       idIndex++
     })
 
     // 刪除 todo
     $('.todo__list').on('click', '.todo__delete', (e) => {
-      $(e.target).closest('.todo__item').fadeOut(function() {
-        $(this).remove()
-        renewNumberOfUndoneTodos()
-      })
+      const targetId = Number($(e.target).closest('.todo__item').find('.todo__check').attr('id'))
+      todolistData = todolistData.filter((todoItem) => todoItem.id !== targetId)
+      reRenderTodos()
     })
 
     // 編輯 todo
@@ -193,14 +208,19 @@
       const todoNewContent = todoItem.find('.todo__new-content')
 
       if (todoItem.hasClass('edit-mode')) {
+        const targetId = Number(todoItem.find('.todo__check').attr('id'))
+
         // 若編輯後的新內容為空，直接刪除該 todo 後 return
         if (!todoNewContent.val()) {
-          todoItem.fadeOut(function() {
-            $(this).remove()
-          })
+          todolistData = todolistData.filter((todoItem) => todoItem.id !== targetId)
+          reRenderTodos()
           return
         }
-        todoContent.text(todoNewContent.val())
+
+        $.each(todolistData, (index, todoItem) => {
+          if (todoItem.id === targetId) todoItem.todo = todoNewContent.val()
+        })
+        reRenderTodos()
 
         $(e.target).hasClass('material-icons-outlined') ?
         $(e.target).text('edit') :
@@ -218,10 +238,14 @@
 
     // 標記 todo 完成 / 未完成
     $('.todo__list').on('change', '.todo__check', (e) => {
-      $(e.target).next().toggleClass('text-decoration-line-through text-muted')
-      if (taskFilterStatus === 'active' && $(e.target).is(':checked')) $(e.target).closest('.todo__item').addClass('d-none')
-      if (taskFilterStatus === 'completed' && $(e.target).is(':not(:checked)')) $(e.target).closest('.todo__item').addClass('d-none')
-        renewNumberOfUndoneTodos()
+      const targetId = Number($(e.target).closest('.todo__item').find('.todo__check').attr('id'))
+      $.each(todolistData, (index, todoItem) => {
+        if (todoItem.id === targetId) todoItem.isChecked = !todoItem.isChecked
+      })
+      reRenderTodos()
+
+      if (taskFilterStatus === 'active') hideCompletedTodos()
+      if (taskFilterStatus === 'completed') hideActiveTodos()
     })
 
     // 篩選 todos
@@ -232,40 +256,29 @@
     })
     $('.task-active').click((e) => {
       toggleTaskFilterBtn($(e.target).closest('.btn'))
-      $('.todo__check').closest('.todo__item').removeClass('d-none')
-      $('.todo__check:checked').closest('.todo__item').addClass('d-none')
+      hideCompletedTodos()
       taskFilterStatus = 'active'
     })
     $('.task-completed').click((e) => {
       toggleTaskFilterBtn($(e.target).closest('.btn'))
-      $('.todo__check').closest('.todo__item').addClass('d-none')
-      $('.todo__check:checked').closest('.todo__item').removeClass('d-none')
+      hideActiveTodos()
       taskFilterStatus = 'completed'
     })
 
     // 刪除已完成 todos
     $('.task-delete-completed').click(() => {
-      $('.todo__check:checked').closest('.todo__item').fadeOut(function() {
-        $(this).remove()
-      })
+      todolistData = todolistData.filter((todoItem) => !todoItem.isChecked)
+      reRenderTodos()
     })
 
     // 儲存 todos
     $('.save-all').click(() => {
       if (!confirm('確定要儲存嗎？會覆蓋之前的紀錄')) return
-      const todoList = []
-
-      $('.todo__item').each(function() {
-        todoList.push({
-          id: $(this).find('.todo__check').attr('id'),
-          todo: $(this).find('.todo__content').text(),
-          isChecked: $(this).find('.todo__check:checked').is(':checked')
-        })
-      })
 
       const data = {
-        todo_list: JSON.stringify(todoList)
+        todo_list: JSON.stringify(todolistData)
       }
+
       $.ajax({
         type: 'POST',
         url: `${BASE_URL}api_save_todolist.php`,
