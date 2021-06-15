@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twitch Top Games</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+
+    body {
+      background: url('./twitchbanner.webp') center/cover no-repeat;
+      background-attachment: fixed;
+      background-color: rgba(0, 0, 0, 0.5);
+      /* 意外發現這個有趣的屬性，瀏覽器相容性也還行，你說 IE 呢？那是什麼？ */
+      background-blend-mode: multiply;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 20px 10px;
+      box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.4);
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .header__nav .game-label {
+      color: black;
+      text-decoration: none;
+      margin: 5px;
+      padding: 20px;
+      transition: background 500ms ease, color 500ms ease;
+    }
+
+    .header__nav .game-label:hover,
+    .header__nav .game-label.active {
+      background: #4e4f4e;
+      color: white;
+    }
+
+    .active {
+      cursor: default;
+    }
+
+    main {
+      position: relative;
+      top: 66px;
+      padding-bottom: 5rem;
+    }
+
+    .main__description {
+      text-align: center;
+      line-height: 3rem;
+      margin: 3rem 0;
+      font-size: 20px;
+      color: white;
+    }
+
+    .hamburger {
+      display: none;
+      cursor: pointer;
+    }
+    /* Streams styling */
+    .main__container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 5rem;
+    }
+
+    .stream {
+      display: flex;
+      flex-direction: column;
+      background: #333;
+      width: 25vw;
+      max-width: 500px;
+      min-width: 300px;
+      transition: transform 150ms linear, filter 500ms ease, box-shadow 150ms linear;
+      cursor: default;
+    }
+
+    .stream:hover {
+      transform: translate(8px, -8px);
+      filter: brightness(1.2);
+    }
+
+    .before-stream,
+    .after-stream {
+      content: '';
+      position: absolute;
+      background: transparent;
+      border-color: transparent;
+      transition: transform 150ms linear, border 150ms linear;
+    }
+
+    .before-stream {
+      top: 0;
+      left: 0;
+      border-style: solid;
+      border-width: 8px 0 0 8px;
+      transform-origin: left top;
+      transform: rotateY(180deg) scale(0);
+    }
+    .after-stream {
+      right: 0;
+      bottom: 0;
+      border-style: solid;
+      border-width: 8px 0 0 8px;
+      transform-origin: bottom right;
+      transform: rotateX(-180deg) scale(0);
+    }
+
+    .stream:hover .before-stream {
+      transform: rotateY(180deg) scale(1)
+    }
+    .stream:hover .after-stream {
+      transform: rotateX(-180deg) scale(1)
+    }
+
+    .empty-stream {
+      width: 25vw;
+      max-width: 500px;
+      min-width: 300px;
+    }
+
+    .stream__preview {
+      background: url(./preview.jfif) center/cover no-repeat;
+      /* 0.5625 是依照 twitch 給的 preview 圖比例下去計算，只用 height: 100% 會造成下面有多餘空間 */
+      height: calc(25vw * 0.5625);
+      max-height: calc(500px * 0.5625);
+      min-height: calc(300px * 0.5625);
+    }
+
+    .stream__preview img {
+      position: relative;
+      width: 100%;
+      opacity: 0;
+      transition: opacity 500ms ease;
+    }
+
+    .stream__info {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      padding: 0 10px;
+    }
+
+    .stream__info__user-photo {
+      background: #333;
+      height: 70px;
+      flex: 0 0 70px;
+      border-radius: 50%;
+      margin-right: 10px;
+      overflow: hidden;
+    }
+
+    .stream__info__user-photo img {
+      width: 100%;
+      opacity: 0;
+      transition: opacity 500ms ease;
+    }
+
+    .stream__info__description {
+      width: 70%;
+      flex: 1;
+      font-size: 20px;
+      color: white;
+      line-height: 35px;
+      padding: 10px 0;
+    }
+
+    .stream__info__description__title {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .stream__info__description__bottom {
+      display: flex;
+    }
+
+    .stream__info__description__username {
+      flex: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    
+    .stream__info__description__viewers {
+      position: relative;
+      right: 0;
+      margin-left: 14px;
+      border-radius: 5px;
+      padding: 2px;
+      font-size: 16px;
+    }
+
+    .stream__info__description__viewers::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: -14px;
+      background: red;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    /* Streams styling */
+
+    .more-btn {
+      display: block;
+      background: #333;
+      color: white;
+      font-size: 1.5rem;
+      width: 200px;
+      height: 80px;
+      margin: 0 auto;
+      border: none;
+      cursor: pointer;
+    }
+
+    .more-btn:hover {
+      filter: brightness(1.2);
+    }
+
+    .hide {
+      opacity: 0;
+    }
+
+    .disable {
+      background: rgba(0, 0, 0, 0);
+      cursor: default;
+    }
+    /* RWD */
+    @media (max-width: 1200px) {
+      .header__nav {
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        right: 0;
+        top: 60px;
+        height: 0; /* height 設為 0 有時還是會在畫面上產生一條很細的線，要再研究解決辦法，先把背景設成跟 header 一樣 */
+        overflow: hidden;
+        transition: height 500ms ease;
+      }
+
+      .show {
+        height: 342px;
+      }
+
+      .hamburger {
+        display: inline;
+      }
+    }
+    /* RWD */
+
+    /* 永遠顯示滾動條（滾動條會擠壓頁面寬度，造成頁面內容在滾動條出現時會變小，影響使用體驗） */
+    html {
+    overflow-y: scroll;
+    }
+    /* 永遠顯示滾動條（滾動條會擠壓頁面寬度，造成頁面內容在滾動條出現時會變小，影響使用體驗） */
+  </style>
+</head>
+<body>
+  <header>
+    <h2 class="header__title">Twitch Top Games</h2>
+    <nav class="header__nav">
+      <!-- content will be injected by javascript -->
+    </nav>
+    <span class="material-icons-outlined hamburger">menu</span>
+  </header>
+  <main>
+    <div class="main__description">
+      <h2 class="game-title">
+        Loading...
+      </h2>
+      <p>Top 20 popular live streams sorted by current viewers</p>
+    </div>
+    <div class="main__container">
+      <!-- content will be injected by javascript -->
+    </div>
+    <button class="more-btn hide disable">沒有更多實況</button>
+  </main>
+
+  <script>
+    const headerNav = document.querySelector('.header__nav')
+    const gameTitle = document.querySelector('.game-title')
+    const mainContainer = document.querySelector('.main__container')
+    const moreBtn = document.querySelector('.more-btn')
+    const BASE_URL = 'https://api.twitch.tv/kraken'
+    const HEADERS = {
+      headers: {
+        Accept: 'application/vnd.twitchtv.v5+json',
+        'Client-ID': 'gr17hvsma74whtwjtyu3hj3fwj77tb'
+      }
+    }
+    const STREAM_TEMPLATE = `
+      <div class="before-stream"></div>
+      <div class="after-stream"></div>
+      <a class="stream__url" href="$url" target="_blank">
+        <div class="stream__preview">
+          <img src="$preview" alt="stream-preview" onload="this.style.opacity = 1">
+        </div>
+        <div class="stream__info">
+          <div class="stream__info__user-photo"><img src="$avatar" alt="user-avatar" onload="this.style.opacity = 1"></div>
+          <div class="stream__info__description">
+            <h3 class="stream__info__description__title">$title</h3>
+            <div class="stream__info__description__bottom">
+              <p class="stream__info__description__username">$name</p>
+              <span class="stream__info__description__viewers">$viewers</span>
+            </div>
+          </div>
+        </div>
+      </a>
+      `
+    const GAMES_LIMIT = 5 // maximum = 100
+    const STREAMS_LIMIT = 20 // maximum = 100
+    const OFFSET_LIMIT = 900
+    let offset = 0 // Capped at 900
+    let isLoading = false
+
+    init()
+
+    async function init() {
+      try {
+        const data = await getTopGames()
+        const topGames = data.top
+        topGames.forEach((game) => renderGameLabel(game))
+        // 預設顯示最熱門遊戲的實況列表
+        changeGame(headerNav.children[0])
+      } catch(err) {
+        console.log(err.message)
+      }
+    }
+
+    async function getTopGames() {
+      const GAMES_URL = `${BASE_URL}/games/top?limit=${GAMES_LIMIT}`
+      const response = await fetch(GAMES_URL, HEADERS)
+      if (!response.ok) throw new Error(`${response.status}: Network response was not ok`)
+      return await response.json()
+    }
+
+    function renderGameLabel({ game }) { // 因為要拿物件底下的 game，不想再多想一個變數名稱，所以直接在這邊解構
+      const { name, logo } = game
+      const gameLabel = document.createElement('a')
+      gameLabel.href = '#'
+      gameLabel.classList.add('game-label')
+      gameLabel.innerText = name
+      headerNav.appendChild(gameLabel)
+    }
+
+    function changeGame(gameLabel) {
+      resetPage();
+
+      const gameName = gameLabel.innerText
+      gameTitle.innerText = gameName
+      gameLabel.classList.add('active')
+
+      renderStreams(gameName)
+    }
+
+    async function renderStreams(gameName) {
+      try {
+        const data = await getStreams(gameName)
+        appendStreams(data.streams)
+
+        isLoading = false
+        offset += STREAMS_LIMIT
+      } catch (err) {
+        console.log(err.message)
+      }
+    }
+
+    async function getStreams(gameName) {
+      // isLoading 設為 true，避免重複發送請求
+      isLoading = true
+      const STREAMS_URL = `${BASE_URL}/streams?game=${gameName}&limit=${STREAMS_LIMIT}&offset=${offset}`
+      const response = await fetch(STREAMS_URL, HEADERS)
+      if (!response.ok) throw new Error(`${response.status}: Network response was not ok`)
+      return await response.json()
+    }
+
+    function appendStreams(streams) {
+      removeAllEmptyStreams()
+      const fragment = document.createDocumentFragment() // 用 createDocumentFragment 期望可以提升網頁效率，但效果好像有限
+      streams.forEach(stream => fragment.appendChild(createStream(stream)));
+      mainContainer.appendChild(fragment)
+      addEmptyStream()
+      addEmptyStream()
+    }
+
+    function createStream(stream) {
+      const { channel, preview, viewers } = stream
+      const { url, display_name, status, logo } = channel // display_name = 實況主名稱、status = 實況標題、logo = 實況主頭貼
+      const { large } = preview // large = 大的實況預覽圖
+
+      const streamDiv = document.createElement('div')
+      streamDiv.classList.add('stream')
+      streamDiv.innerHTML = STREAM_TEMPLATE
+        .replace('$url', url)
+        .replace('$preview', large)
+        .replace('$avatar', logo)
+        .replace('$title', status)
+        .replace('$name', display_name)
+        .replace('$viewers', viewers)
+
+      return streamDiv
+    }
+
+    // 在最後面加入幾個空的 div，可以讓實況列表更整齊
+    function addEmptyStream() {
+      const emptyDiv = document.createElement('div')
+      emptyDiv.classList.add('empty-stream')
+      mainContainer.appendChild(emptyDiv)
+    }
+
+    function removeAllEmptyStreams() {
+      const emptyDivs = document.querySelectorAll('.empty-stream')
+      for (const div of emptyDivs) mainContainer.removeChild(div)
+    }
+
+    // 把目前列表的所有 stream 清空，並把 nav 的 active class 也清掉
+    function resetPage() {
+      moreBtn.classList.add('hide')
+      for (const navItem of headerNav.children) navItem.classList.remove('active')
+      mainContainer.innerHTML = ''
+      offset = 0
+    }
+
+    function toggleBoxShadow(e) {
+      const target = e.target.closest('.stream')
+      if (!target || !target.classList.contains('stream')) return
+
+      const beforeTarget = target.querySelector('.before-stream')
+      const afterTarget = target.querySelector('.after-stream')
+      if (e.type === 'mouseover') {
+        const randomColor = Math.floor(Math.random() * 360)
+        const shadowColor = `hsl(${randomColor}, 100%, 50%)` // s 設為 100%，L 設為 50%，避免暗色會跟背景不好分辨
+        target.style.boxShadow = `-8px 8px 0 0 ${shadowColor}`
+        beforeTarget.style.borderColor = `transparent transparent transparent ${shadowColor}`
+        afterTarget.style.borderColor = `transparent transparent transparent ${shadowColor}`
+      } else if (e.type === 'mouseout') {
+        target.style.boxShadow = ''
+        beforeTarget.style.borderColor = ''
+        afterTarget.style.borderColor = ''
+      }
+    }
+
+    // 以下 Event Listener 區
+
+    headerNav.addEventListener('click', (e) => {
+      const target = e.target
+      // 如果點擊已經列出實況列表的遊戲名稱，不做任何事，避免重複發送 request
+      if (target.classList.contains('active') || !target.classList.contains('game-label')) return
+
+      changeGame(target)
+
+      // 在小螢幕下，按下漢堡選單中的選項後，關閉漢堡選單，不影響大尺寸螢幕
+      headerNav.classList.remove('show')
+    })
+
+    document.querySelector('.hamburger').addEventListener('click', () => headerNav.classList.toggle('show'))
+
+    // add box-shadow while hovering
+    mainContainer.addEventListener('mouseover', toggleBoxShadow)
+    mainContainer.addEventListener('mouseout', toggleBoxShadow)
+
+    // infinite scroll
+    document.addEventListener('scroll', () => {
+      // 檢查 offset，大於 OFFSET_LIMIT 時不再允許載入新的實況列表，並顯示在底部準備好的訊息
+      if (offset >= OFFSET_LIMIT) return moreBtn.classList.remove('hide')
+
+      const scrollHeight = Math.max(
+        document.body.scrollHeight, document.documentElement.scrollHeight,
+        document.body.offsetHeight, document.documentElement.offsetHeight,
+        document.body.clientHeight, document.documentElement.clientHeight
+      )
+
+      // 當視窗滑到離頁面底部一半視窗高度時，載入新的實況列表
+      const isAlmostBottom = scrollHeight - window.pageYOffset - (window.innerHeight / 2) < window.innerHeight
+      if (isLoading || !isAlmostBottom) return
+
+      renderStreams(gameTitle.innerText)
+    })
+  </script>
+</body>
+</html>

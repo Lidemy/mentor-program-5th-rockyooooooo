@@ -1,0 +1,338 @@
+@import './base/_variables.scss';
+@import './base/_layouts.scss';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+a{
+  text-decoration: none;
+  color: $black-pure;
+}
+
+/* li 元素的前綴會超出容器，向右移 1rem */
+li {
+  position: relative;
+  left: 1rem;
+}
+
+.container {
+  background: $white-pure;
+  margin: -3.125rem auto 6.625rem;
+  padding: 0.625rem;
+  max-width: 56.25rem;
+  min-height: calc(100vh - 25.75rem); /* 100vh 扣掉 header, banner, footer 的高度，及 container 本身的 margin，總共 25.75rem */
+}
+
+.card {
+  border: solid 1px $grey-04;
+  padding: 1.875rem;
+  font-size: $font-sm;
+}
+
+.btn {
+  background: $white-pure;
+  cursor: pointer;
+  transition: background 500ms ease, color 500ms ease;
+
+  &:hover {
+    background: $grey-02;
+    color: $white-pure;
+  }
+}
+
+.error {
+  color: red;
+}
+
+/* Post Styling */
+.post {
+  & + .post {
+    margin-top: 1.5rem;
+  }
+
+  &__header {
+    display: flex;
+    margin-bottom: 1.25rem;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__title {
+    flex: 1;
+    font-size: $font-md;
+  }
+
+  &__edit-btn,
+  &__delete-btn {
+    background: $white-pure;
+    border: solid 1px $grey-05;
+    padding: 0.375rem 0.75rem;
+    color: $grey-05;
+    font-size: $font-sm;
+  }
+
+  &__delete {
+    margin-left: 0.5rem;
+  }
+
+  &__info {
+    background: $grey-07;
+    padding: 0.75rem 1.375rem;
+    color: $grey-03;
+
+    span {
+      margin-right: 0.625rem;
+      font-size: $font-sm;
+
+      & + span {
+      margin-left: 0.75rem;
+      }
+    }
+  }
+
+  &__preview,
+  &__content {
+    margin: 1rem 0 1.625rem;
+    white-space: pre-line;
+    line-height: 1.5rem;
+    overflow-wrap: anywhere;
+
+    * {
+      width: 95%;
+    }
+  }
+
+  &__preview {
+    max-height: 15rem;
+    overflow: hidden;
+  }
+  
+  &__read-more-btn,
+  &__back-btn {
+    display: inline-block;
+    border: solid 1px $grey-01;
+    padding: 0.75rem 1rem;
+    font-size: $font-sm;
+    color: $black-pure;
+  }
+}
+/* Post Styling */
+
+/* Login Styling */
+.login {
+  &__title {
+    margin-top: 4.5rem;
+    margin-bottom: 2.75rem;
+    text-align: center;
+    font-size: $font-xxl;
+    font-weight: normal;
+  }
+  
+  &__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  &__label {
+    position: relative;
+    left: -8.75rem;
+    margin: 1rem 0;
+    font-size: $font-sm;
+  }
+  
+  &__input {
+    margin-bottom: 0.5rem;
+    padding: 0.25rem;
+    max-width: 25rem;
+    width: 100%;
+    height: 2.5rem;
+    font-size: $font-lg;
+  }
+  
+  &__btn {
+    background: $black-pure;
+    margin: 4rem 0 8rem;
+    border: none;
+    max-width: 25rem;
+    width: 100%;
+    height: 3.5rem;
+    color: $white-pure;
+  }
+}
+/* Login Styling */
+
+/* New Post and Edit Post Styling */
+.new-post {
+  &__title {
+    font-size: $font-lg;
+  }
+  
+  &__form {
+    text-align: right;
+  
+    & > *:not(.error) {
+      margin-top: 1.5rem;
+      font-size: $font-sm;
+    }
+    
+    & > *:not(:last-child) {
+      display: block;
+      padding: 0.625rem;
+      width: 100%;
+    }
+  }
+  
+  &__input,
+  &__select {
+    height: 2.5rem;
+  }
+  
+  &__input {
+    border: solid 1px $grey-06;
+  }
+  
+  &__select {
+    background: $grey-07;
+    margin-bottom: 1.5rem;
+    border: none;
+  }
+}
+
+.ck-editor__editable_inline {
+  min-height: 16.75rem;
+}
+
+.submit-post__btn {
+  border: solid 1px $grey-01;
+  padding: 0.875rem 2.5rem;
+  font-size: $font-sm;
+}
+/* New Post and Edit Post Styling */
+
+/* Dashboard and List Styling */
+.dashboard-post {
+  border-bottom: 1px solid $grey-04;
+  padding: 1.25rem 1.875rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 500ms ease, color 500ms ease;
+
+  &:first-child {
+    border-top: 1px solid $grey-04;
+  }
+  
+  &__title {
+    flex: 1;
+    font-size: $font-md;
+  }
+  
+  &__created-at {
+    font-size: $font-sm;
+    color: $grey-03;
+  }
+}
+/* Dashboard and List Styling */
+
+/* List Styling */
+a.dashboard-post:hover {
+  background: $grey-02;
+  color: $white-pure;
+
+  .dashboard-post__created-at {
+    color: $grey-06;
+  }
+}
+/* List Styling */
+
+/* Pagination Styling */
+.pagination {
+  text-align: center;
+
+  * {
+    margin-top: 1rem;
+  }
+  
+  a {
+    display: inline-block;
+    padding: 1rem;
+  }
+  
+  p {
+    font-size: $font-md;
+  }
+}
+/* Pagination Styling */
+
+/* About me Styling */
+.about-me {
+  text-align: center;
+
+  img {
+    width: 100%;
+  }
+}
+/* About me Styling */
+
+/* RWD Styling */
+@media (max-height: 600px) {
+  .login__card {
+    height: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .login__label {
+    position: static;
+  }
+
+  .post__header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .dashboard-post {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 900px) {
+  span.hamburger {
+    display: inline;
+  }
+
+  .header {
+    &__nav {
+      position: absolute;
+      right: 0;
+      top: 5rem;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.3);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 500ms ease;
+
+      &.show {
+        max-height: 20.145rem;
+      }
+    }
+
+    &__navbar,
+    &__controller {
+      display: flex;
+      flex-direction: column;
+
+      a + a {
+        margin: 0;
+      }
+    }
+  }
+}
+/* RWD Styling */
