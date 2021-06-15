@@ -335,29 +335,28 @@
     const GAMES_LIMIT = 5 // maximum = 100
     const STREAMS_LIMIT = 10 // maximum = 100
     const OFFSET_LIMIT = 30
-    let offset = 0 // According to Twicth API v5 documents, capped at 900
+    let offset = 0 // Capped at 900
     let isLoading = false
 
-    getTopGames()
-      .then((topGames) => {
-        topGames.forEach((game) => renderGameLabel(game))
+    init()
 
+    async function init() {
+      try {
+        const data = await getTopGames()
+        const topGames = data.top
+        topGames.forEach((game) => renderGameLabel(game))
         // 預設顯示最熱門遊戲的實況列表
         changeGame(headerNav.children[0])
-      })
+      } catch(err) {
+        console.log(err.message)
+      }
+    }
 
     async function getTopGames() {
       const GAMES_URL = `${BASE_URL}/games/top?limit=${GAMES_LIMIT}`
-
-      const data = await fetch(GAMES_URL, HEADERS)
-        .then((response) => {
-          if (response.ok || response.status === 200) return response.json()
-          throw new Error('Response status is not ok')
-        })
-        .catch((err) => console.log('error occured in getTopGames: ', err.message))
-
-      const topGames = data.top
-      return topGames
+      const response = await fetch(GAMES_URL, HEADERS)
+      if (!response.ok) throw new Error(`${response.status}: Network response was not ok`)
+      return await response.json()
     }
 
     function renderGameLabel({ game }) { // 因為要拿物件底下的 game，不想再多想一個變數名稱，所以直接在這邊解構
@@ -375,30 +374,32 @@
       const gameName = gameLabel.innerText
       gameTitle.innerText = gameName
       gameLabel.classList.add('active')
-      getStreams(gameName)
-          .then(({ streams }) => renderStreams(streams))
+
+      renderStreams(gameName)
+    }
+
+    async function renderStreams(gameName) {
+      try {
+        const data = await getStreams(gameName)
+        appendStreams(data.streams)
+
+        isLoading = false
+        offset += STREAMS_LIMIT
+      } catch (err) {
+        console.log(err.message)
+      }
     }
 
     async function getStreams(gameName) {
       // isLoading 設為 true，避免重複發送請求
       isLoading = true
-
       const STREAMS_URL = `${BASE_URL}/streams?game=${gameName}&limit=${STREAMS_LIMIT}&offset=${offset}`
-      const data = await fetch(STREAMS_URL, HEADERS)
-        .then((response) => {
-          if (response.ok || response.status === 200) {
-            return response.json()
-          }
-          throw new Error('Response status is not ok')
-        })
-        .catch((err) => console.log('error occured in getStreams: ', err.message))
-
-      offset += STREAMS_LIMIT
-      isLoading = false
-      return data
+      const response = await fetch(STREAMS_URL, HEADERS)
+      if (!response.ok) throw new Error(`${response.status}: Network response was not ok`)
+      return await response.json()
     }
 
-    function renderStreams(streams) {
+    function appendStreams(streams) {
       removeAllEmptyStreams()
       const fragment = document.createDocumentFragment() // 用 createDocumentFragment 期望可以提升網頁效率，但效果好像有限
       streams.forEach(stream => fragment.appendChild(createStream(stream)));
@@ -497,8 +498,8 @@
       // 當視窗滑到離頁面底部一半視窗高度時，載入新的實況列表
       const isAlmostBottom = scrollHeight - window.pageYOffset - (window.innerHeight / 2) < window.innerHeight
       if (isLoading || !isAlmostBottom) return
-      getStreams(gameTitle.innerText)
-        .then(({ streams }) => renderStreams(streams))
+
+      renderStreams(gameTitle.innerText)
     })
   </script>
 </body>
