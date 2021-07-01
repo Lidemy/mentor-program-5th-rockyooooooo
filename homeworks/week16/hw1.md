@@ -2,9 +2,11 @@ JavaScript 是一個單執行緒的程式語言，只有一個 call stack，也�
 
 在執行程式碼的時候，會將每個動作放進 call stack，由下到上堆疊，由上到下執行，當最上面的執行完畢就會被 pop 掉，直到 stack 清空。
 
-`setTimeout()` 會讓瀏覽器計時，並在時間到時把 `setTimeout()` 裡的 function 放進 callback queue，當 stack 清空時，callback queue 的第一個東西會被 pop 出來，並 push 進 stack 執行。
+`setTimeout()` 會讓瀏覽器（如果是 node.js 則是 C++ APIs，下面都以瀏覽器來說）計時，並在時間到時把 `setTimeout()` 裡的 function 放進 callback queue，當 stack 清空時，callback queue 的第一個東西會被 pop 出來，並 push 進 stack 執行。
 
 stack 為先進後出，queue 為先進先出。
+
+瀏覽器是大概的說法，更準確地說應該是瀏覽器的某一個 thread。
 
 輸出：
 
