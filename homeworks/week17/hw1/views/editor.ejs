@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/header') %>
+  <%- include('partials/banner') %>
+  <section class="container">
+    <article class="card">
+      <h2 class="new-post__title">發表文章：</h2>
+      <form class="new-post__form" action="/editor" method="POST">
+        <input class="new-post__input" type="text" name="title" placeholder="請輸入文章標題" value="<%= article ? article.title : '' %>">
+        <select class="new-post__select" name="categoryId" id="category">
+          <option value="">請輸入文章分類</option>
+          <% for(const category of categories) { %>
+            <option value="<%= category.id %>" <%= article && article.Category.id === category.id ? 'selected' : '' %>>
+              <%= category.name %>
+            </option>
+          <% } %>
+        </select>
+        <textarea id="editor" class="new-post__textarea" name="content" id="content" rows="10"><%= article ? article.content : '' %></textarea>
+        <% if (errorMessage) { %>
+          <h2 class="error"><%= errorMessage %></h2>
+        <% } %> 
+        <input type="hidden" name="isNewArticle" value="<%= !article %>">
+        <input type="hidden" name="id" value="<%= article ? article.id : '' %>">
+        <button class="btn submit-post__btn" type="submit">送出文章</button>
+      </form>
+    </article>
+  </section>
+  <%- include('partials/footer') %>
+  <script src="https://cdn.ckeditor.com/ckeditor5/27.1.0/classic/ckeditor.js"></script>
+  <script src="/javascripts/ckeditor.js"></script>
+</body>
+</html>

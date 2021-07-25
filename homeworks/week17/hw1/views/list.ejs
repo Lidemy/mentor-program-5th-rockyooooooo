@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/header') %>
+  <%- include('partials/banner') %>
+  <section class="container">
+    <div class="card">
+      <% for(const article of articles) { %>
+        <a class="dashboard-post" href="/post/<%= article.id %>">
+          <h3 class="dashboard-post__title"><%= article.title %></h3>
+          <span class="dashboard-post__created-at"><%= article.createdAt.toLocaleString() %></span>
+        </a>
+      <% } %>
+      <%- include('partials/paginator') %> 
+    </div>
+  </section>
+  <%- include('partials/footer') %> 
+</body>
+</html>

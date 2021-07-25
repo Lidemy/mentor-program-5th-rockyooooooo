@@ -1,0 +1,11 @@
+<div class="pagination">
+  <% if (previousPage) { %>
+    <a class="btn" href="<%= path %>?page=1">第一頁</a>
+    <a class="btn" href="<%= path %>?page=<%= previousPage %>">上一頁</a>
+  <% } %>
+  <% if (nextPage) { %>
+    <a class="btn" href="<%= path %>?page=<%= nextPage %>">下一頁</a>
+    <a class="btn" href="<%= path %>?page=<%= pageCount %>">最後一頁</a>
+  <% } %>
+  <p>共 <%= articleCount %> 筆文章，頁數：<%= currentPage %> / <%= pageCount %></p>
+</div>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/header') %>
+  <%- include('partials/banner') %>
+
+  <section class="container">
+    <article class="post card">
+      <div class="post__header">
+        <h3 class="post__title"><%= article.title %></h3>
+        <% if (adminId && adminId === article.AdminId) { %> 
+          <div class="post__btn-group">
+            <a href="/editor/<%= article.id %>" class="post__edit-btn btn">編輯</a>
+            <% if (article.is_deleted) { %>
+              <a href="/undelete/<%= article.id %>" class="post__undelete-btn btn">復原</a>
+            <% } else { %>
+              <a href="/delete/<%= article.id %>" class="post__delete-btn btn">刪除</a>
+            <% } %>
+          </div>
+        <% } %> 
+      </div>
+      <div class="post__info">
+        <span class="material-icons-outlined">watch_later</span><%= article.createdAt.toLocaleString() %>
+        <span class="material-icons-outlined">folder</span><%= categoryName %>
+      </div>
+      <div class="post__content ck-content"><%- article.content %></div>
+      <button class="post__back-btn btn" onclick="history.back()">回上一頁</>
+    </article>
+  </section>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

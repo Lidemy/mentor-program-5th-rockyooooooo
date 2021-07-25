@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/header') %>
+  <%- include('partials/banner') %>
+  <section class="container">
+    <% for(const article of articles) { %>
+      <article class="post preview card">
+        <div class="post__header">
+          <h3 class="post__title"><%= article.title %> </h3>
+          <% if (adminId && adminId === article.AdminId) { %>
+            <a href="/editor/<%= article.id %>" class="post__edit-btn btn">編輯</a>
+          <% } %>
+        </div>
+        <div class="post__info">
+          <span class="material-icons-outlined">watch_later</span><%= article.createdAt.toLocaleString() %> 
+          <span class="material-icons-outlined">folder</span><%= article.Category.name %> 
+        </div>
+        <div class="post__content ck-content"><%- article.content %></div>
+        <a class="post__read-more-btn btn" href="/post/<%= article.id %>">READ MORE</a>
+      </article>
+    <% } %> 
+    <%- include('partials/paginator') %> 
+  </section>
+  <%- include('partials/footer') %> 
+</body>
+</html>
