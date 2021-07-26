@@ -10,7 +10,7 @@ const prizeController = require('./controllers/prize')
 const app = express()
 const port = process.env.PORT || 3000
 
-app.set('view engine', 'ejs')
+// app.set('view engine', 'ejs')
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
@@ -61,7 +61,7 @@ function getLottery(req, res) {
 
 // 首頁
 app.get('/', (req, res) => {
-  res.render('index')
+  res.sendFile('index.html')
 })
 
 // 抽
