@@ -241,7 +241,7 @@ function appendPrizeToPrizesTable(prize) {
 
 async function createPrize(data) {
   try {
-    const response = await fetch(`${BASE_URL}/prize`, {
+    const response = await fetch(`${BASE_URL}/prizes`, {
       headers: {
         'content-type': 'application/json'
       },
@@ -258,11 +258,11 @@ async function createPrize(data) {
 
 async function updatePrize(data) {
   try {
-    const response = await fetch(`${BASE_URL}/prize/${data.id}`, {
+    const response = await fetch(`${BASE_URL}/prizes/${data.id}`, {
       headers: {
         'content-type': 'application/json'
       },
-      method: 'POST',
+      method: 'PUT',
       body: JSON.stringify(data)
     })
     if (!response.ok) throw new Error('Something went wrong')
@@ -275,7 +275,9 @@ async function updatePrize(data) {
 
 async function deletePrize(id) {
   try {
-    const response = await fetch(`${BASE_URL}/prize/${id}`)
+    const response = await fetch(`${BASE_URL}/prizes/${id}`, {
+      method: 'DELETE'
+    })
     if (!response.ok) throw new Error('Something went wrong')
   } catch (error) {
     return console.error(error)

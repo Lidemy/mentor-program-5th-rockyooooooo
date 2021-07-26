@@ -68,9 +68,9 @@ app.get('/draw', prizeController.getAllPrizesForLottery, getLottery)
 
 // 獎項
 app.get('/prizes', isAdmin, prizeController.getAllPrizes)
-app.post('/prize', isAdmin, prizeController.addPrize)
-app.post('/prize/:id', isAdmin, prizeController.updatePrize)
-app.get('/prize/:id', isAdmin, prizeController.deletePrize)
+app.post('/prizes', isAdmin, prizeController.addPrize)
+app.put('/prizes/:id', isAdmin, prizeController.updatePrize)
+app.delete('/prizes/:id', isAdmin, prizeController.deletePrize)
 
 // 管理員
 app.post('/login', userController.handleLogin)
