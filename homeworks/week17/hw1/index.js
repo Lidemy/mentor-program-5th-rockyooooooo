@@ -5,6 +5,7 @@ const path = require('path')
 
 const app = express()
 const port = process.env.PORT || 3000
+const secret = process.env.secret || 'keyboard cat'
 const ARTICLES_NUM_LIMIT = 5
 
 const articleController = require('./controllers/article')
@@ -14,7 +15,7 @@ const adminController = require('./controllers/admin')
 app.set('view engine', 'ejs')
 
 app.use(session({
-  secret: 'keyboard cat',
+  secret,
   resave: false,
   saveUninitialized: true
 }))

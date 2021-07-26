@@ -9,14 +9,13 @@ const prizeController = require('./controllers/prize')
 
 const app = express()
 const port = process.env.PORT || 3000
-
-// app.set('view engine', 'ejs')
+const secret = process.env.secret || 'keyboard cat'
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(session({
-  secret: 'kaneshiro',
+  secret,
   resave: false,
   saveUninitialized: true
 }))
