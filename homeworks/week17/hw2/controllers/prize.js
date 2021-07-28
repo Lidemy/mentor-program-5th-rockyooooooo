@@ -1,6 +1,7 @@
 const db = require('../models')
 
 const { Prize } = db
+let message = ''
 
 const prizeController = {
   getAllPrizes: async(req, res) => {
@@ -8,12 +9,17 @@ const prizeController = {
     try {
       prizes = await Prize.findAll()
     } catch (error) {
-      return res.send({ error })
+      message = error.toString()
+      return res.send({ message })
     }
     res.send({ prizes })
   },
   addPrize: async(req, res) => {
     const { name, description, imgUrl, weight } = req.body
+    if (isNaN(weight)) {
+      message = '機率必須是數字'
+      return res.send({ message })
+    }
 
     let prize = null
     try {
@@ -24,12 +30,18 @@ const prizeController = {
         weight: Number(weight)
       })
     } catch (error) {
-      return res.send({ error })
+      message = error.toString()
+      return res.send({ message })
     }
     res.send({ prize })
   },
   updatePrize: async(req, res) => {
     const { id, name, description, imgUrl, weight } = req.body
+    if (isNaN(weight)) {
+      message = '機率必須是數字'
+      return res.send({ message })
+    }
+
     try {
       await Prize.update({
         name,
@@ -42,9 +54,10 @@ const prizeController = {
         }
       })
     } catch (error) {
-      return res.send({ error })
+      message = error.toString()
+      return res.send({ message })
     }
-    const message = '更新成功！'
+    message = '更新成功！'
     res.send({ message })
   },
   deletePrize: async(req, res) => {
@@ -56,9 +69,10 @@ const prizeController = {
         }
       })
     } catch (error) {
-      return res.send({ error })
+      message = error.toString()
+      return res.send({ message })
     }
-    const message = '刪除成功！'
+    message = '刪除成功！'
     res.send({ message })
   },
   getAllPrizesForLottery: async(req, res, next) => {
@@ -66,7 +80,8 @@ const prizeController = {
     try {
       prizes = await Prize.findAll()
     } catch (error) {
-      return res.send({ error })
+      message = error.toString()
+      return res.send({ message })
     }
 
     res.prizes = JSON.stringify(prizes)

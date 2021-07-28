@@ -131,8 +131,8 @@ async function handleDrawBtn() {
   const lotteryTemplate = `
     <img src="${result.imgUrl}" class="card-img-top">
     <div class="card-body">
-      <h5 class="card-title">${result.name}</h5>
-      <p class="card-text">${result.description}</p>
+      <h5 class="card-title">${escapeHtml(result.name)}</h5>
+      <p class="card-text">${escapeHtml(result.description)}</p>
       <button id="index-btn" class="btn btn-primary">回首頁</button>
     </div>
   `
@@ -160,21 +160,28 @@ async function handleSettingBtn() {
   }
 }
 
-function handleCreateBtn() {
+async function handleCreateBtn() {
+  if (isNaN(document.querySelector('input[name=weight]').value)) return alert('機率必須是數字啦不要壞壞！')
+
   const data = {}
   for (const input of ['name', 'description', 'imgUrl', 'weight']) {
-    data[input] = document.querySelector(`input[name=${input}]`).value
-    document.querySelector(`input[name=${input}]`).value = ''
+    const inputEl = document.querySelector(`input[name=${input}]`)
+    data[input] = input === 'weight' ? Number(inputEl.value) : inputEl.value
+    inputEl.value = ''
   }
-  createPrize(data)
+  const { prize } = await createPrize(data)
+  data.id = prize.id
   appendPrizeToPrizesTable(data)
 }
 
 function handleEditBtn(e) {
   const targetTr = e.target.closest('tr')
+  if (isNaN(targetTr.querySelector('input[name=weight]').value)) return alert('機率必須是數字啦不要壞壞！')
+
   const newData = {}
   for (const input of ['id', 'name', 'description', 'imgUrl', 'weight']) {
-    newData[input] = targetTr.querySelector(`input[name=${input}]`).value
+    const inputEl = targetTr.querySelector(`input[name=${input}]`)
+    newData[input] = input === 'weight' ? Number(inputEl.value) : inputEl.value
   }
   updatePrize(newData)
 }
@@ -239,7 +246,17 @@ function appendPrizeToPrizesTable(prize) {
   prizesTable.appendChild(newTr)
 }
 
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
 async function createPrize(data) {
+  let result = null
   try {
     const response = await fetch(`${BASE_URL}/prizes`, {
       headers: {
@@ -249,11 +266,13 @@ async function createPrize(data) {
       body: JSON.stringify(data)
     })
     if (!response.ok) throw new Error('Something went wrong')
+    result = await response.json()
   } catch (error) {
     return console.error(error)
   }
 
   alert('新增成功')
+  return result
 }
 
 async function updatePrize(data) {
