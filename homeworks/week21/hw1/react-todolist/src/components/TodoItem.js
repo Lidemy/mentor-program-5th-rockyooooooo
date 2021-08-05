@@ -56,6 +56,7 @@ const DeleteTodoButton = styled(Button)`
 
 export default function TodoItem({ todo, handleDeleteTodoButtonClick, handleTodoCheckBoxChange, handleTodoContentUpdate }) {
   const todoContentRef = useRef()
+
   return (
     <TodoItemWrapper $isChecked={todo.isChecked}>
       <TodoCheckBox
@@ -67,6 +68,7 @@ export default function TodoItem({ todo, handleDeleteTodoButtonClick, handleTodo
         ref={todoContentRef}
         $isChecked={todo.isChecked}
         onBlur={() => handleTodoContentUpdate(todo.id)(todoContentRef.current.innerText)}
+        suppressContentEditableWarning={true} // contentEditable 跟 children 讓 react 發出警告，這行可以讓警告不要出現，但沒有解決問題
         contentEditable
       >
         {todo.content}
