@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { TodoItem, Button, TodosFilter } from './'
+import PropTypes from 'prop-types'
 
 const TodoListWrapperItem = styled.div`
   display: flex;
@@ -69,4 +70,17 @@ export default function TodoListWrapper({ todos, setTodos, filter, setFilter }) 
       <RemoveAllTodosButton onClick={handleRemoveAllTodosButtonClick}>刪除全部</RemoveAllTodosButton>
     </TodoListWrapperItem>
   )
+}
+
+TodoListWrapper.propTypes = {
+  todos: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      content: PropTypes.string.isRequired,
+      isChecked: PropTypes.bool.isRequired
+    }).isRequired
+  ).isRequired,
+  setTodos: PropTypes.func.isRequired,
+  filter: PropTypes.oneOf([null, true, false]),
+  setFilter: PropTypes.func.isRequired
 }

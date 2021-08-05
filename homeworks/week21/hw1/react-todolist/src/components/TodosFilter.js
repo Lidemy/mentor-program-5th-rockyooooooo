@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import Button from './Button'
+import PropTypes from 'prop-types'
 
 const TodosFilterItem = styled.div`
 display: flex;
@@ -27,4 +28,9 @@ export default function TodosFilter({ filter, setFilter }) {
       <Completed onClick={handleTodosFilterToggle(false)}>已完成</Completed>
     </TodosFilterItem>
   )
+}
+
+TodosFilter.propTypes = {
+  filter: PropTypes.oneOf([null, true, false]),
+  setFilter: PropTypes.func.isRequired
 }

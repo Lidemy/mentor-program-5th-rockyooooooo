@@ -1,7 +1,9 @@
-import { useRef } from 'react'
 import styled from 'styled-components'
 import Button from './Button'
 import colors from '../constants/colors'
+import ContentEditable from './contentEditable/contentEditable'
+import './contentEditable/contentEditable.css';
+import PropTypes from 'prop-types'
 
 const TodoItemWrapper = styled.li`
   position: relative;
@@ -27,27 +29,6 @@ const TodoCheckBox = styled.input`
   cursor: pointer;
 `
 
-const TodoContent = styled.pre`
-  flex: 1;
-  overflow-wrap: anywhere;
-  font-size: 1.5rem;
-  color: ${colors.gray01};
-  padding: 0.25rem 0.5rem;
-  border: 1px solid transparent;
-  border-radius: 0;
-  cursor: default;
-  transition: color 300ms ease, border-color 300ms ease;
-
-  &:focus {
-    outline: none;
-    border-bottom: 1px solid ${colors.gray01};
-    cursor: text;
-  }
-
-  ${(props) => props.$isChecked && 'text-decoration: line-through;'}
-  ${(props) => props.$isChecked && `color: ${colors.gray03};`}
-`
-
 const DeleteTodoButton = styled(Button)`
   opacity: 0;
   flex-shrink: 0;
@@ -55,8 +36,7 @@ const DeleteTodoButton = styled(Button)`
 `
 
 export default function TodoItem({ todo, handleDeleteTodoButtonClick, handleTodoCheckBoxChange, handleTodoContentUpdate }) {
-  const todoContentRef = useRef()
-
+  const contentEditableClassName = `editableContent ${todo.isChecked ? 'isDone' : ''}`
   return (
     <TodoItemWrapper $isChecked={todo.isChecked}>
       <TodoCheckBox
@@ -64,18 +44,24 @@ export default function TodoItem({ todo, handleDeleteTodoButtonClick, handleTodo
         checked={todo.isChecked}
         onChange={handleTodoCheckBoxChange(todo.id)}
       />
-      <TodoContent
-        ref={todoContentRef}
-        $isChecked={todo.isChecked}
-        onBlur={() => handleTodoContentUpdate(todo.id)(todoContentRef.current.innerText)}
-        suppressContentEditableWarning={true} // contentEditable 跟 children 讓 react 發出警告，這行可以讓警告不要出現，但沒有解決問題
-        contentEditable
-      >
-        {todo.content}
-      </TodoContent>
-      <DeleteTodoButton onClick={handleDeleteTodoButtonClick(todo.id)}>
-        刪除
-      </DeleteTodoButton>
+      <ContentEditable
+        tagName="pre"
+        className={contentEditableClassName}
+        html={todo.content}
+        onChange={(e) => handleTodoContentUpdate(todo.id)(e.target.value)}
+      />
+      <DeleteTodoButton onClick={handleDeleteTodoButtonClick(todo.id)}>刪除</DeleteTodoButton>
     </TodoItemWrapper>
   )
+}
+
+TodoItem.propTypes = {
+  todo: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    content: PropTypes.string.isRequired,
+    isChecked: PropTypes.bool.isRequired
+  }).isRequired,
+  handleDeleteTodoButtonClick: PropTypes.func.isRequired,
+  handleTodoCheckBoxChange: PropTypes.func.isRequired,
+  handleTodoContentUpdate: PropTypes.func.isRequired
 }

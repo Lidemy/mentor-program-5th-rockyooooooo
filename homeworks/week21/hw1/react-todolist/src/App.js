@@ -28,7 +28,7 @@ function App() {
     return todosData
   })
   const [newTodoContent, setNewTodoContent] = useState('')
-  const [filter, setFilter] = useState('all')
+  const [filter, setFilter] = useState(null)
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos))
