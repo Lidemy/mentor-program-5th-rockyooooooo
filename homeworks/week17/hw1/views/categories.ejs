@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/header') %>
+  <%- include('partials/banner') %>
+  <section class="container">
+    <div class="card">
+      <% for(const category of categories) { %> 
+        <a class="dashboard-post" href="/categories/<%= category.id %>">
+          <h3 class="dashboard-post__title"><%= category.name %></h3>
+        </a>
+      <% } %> 
+    </div>
+  </section>
+  <%- include('partials/footer') %> 
+</body>
+</html>

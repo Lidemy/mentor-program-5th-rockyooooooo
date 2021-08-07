@@ -1,0 +1,20 @@
+<header class="header">
+  <a href="/" class="header__logo">Allen's Blog</a>
+  <nav class="header__nav">
+    <div class="header__navbar">
+      <a class="btn" href="/list">文章列表</a>
+      <a class="btn" href="/categories">分類專區</a>
+      <a class="btn" href="/about">關於我</a>
+    </div>
+    <div class="header__controller">
+      <% if (adminId) { %>
+        <a class="btn" href="/editor">發表文章</a>
+        <a class="btn" href="/dashboard">管理後臺</a>
+        <a class="btn" href="/logout">登出</a>
+      <% } else { %>
+        <a class="btn" href="/login">登入</a>
+      <% } %>
+    </div>
+  </nav>
+  <span class="material-icons-outlined hamburger">menu</span>
+</header>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/header') %>
+  <%- include('partials/banner') %>
+  <section class="container">
+    <div class="card">
+      <% for(const article of articles) { %>
+        <article class="dashboard-post">
+          <h3 class="dashboard-post__title"><%= article.title %></h3>
+          <% if (article.AdminId === adminId) { %>
+            <div class="post__btn-group">
+              <a href="/editor/<%= article.id %>" class="post__edit-btn btn">編輯</a>
+              <% if (article.is_deleted) { %>
+                <a href="/undelete/<%= article.id %>" class="post__undelete-btn btn">恢復</a>
+              <% } else { %>
+                <a href="/delete/<%= article.id %>" class="post__delete-btn btn">刪除</a>
+              <% } %>
+            </div>
+          <% } %>
+          <span class="dashboard-post__created-at"><%= article.createdAt.toLocaleString() %></span>
+        </article>
+        <% } %>
+        <%- include('partials/paginator') %> 
+    </div>
+  </section>
+  <%- include('partials/footer') %> 
+</body>
+</html>
