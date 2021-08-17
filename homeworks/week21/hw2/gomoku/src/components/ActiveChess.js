@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 const StyledActiveChess = styled.div`
   position: absolute;
   z-index: 1;
-  padding: 1rem;
+  padding: 0.75rem;
   border-radius: 50%;
 
   background: ${(props) => {
@@ -16,11 +16,11 @@ const StyledActiveChess = styled.div`
   }}
 `
 
-export default function ActiveChess({ square, boardRowIndex, squareIndex, handleClick }) {
+export default function ActiveChess({ square, boardRowIndex, squareIndex, onClick }) {
   return (
     <StyledActiveChess
       square={square}
-      onClick={handleClick(boardRowIndex, squareIndex)}
+      onClick={onClick(boardRowIndex, squareIndex)}
     />
   )
 }
@@ -33,5 +33,5 @@ ActiveChess.propTypes = {
   ]),
   boardRowIndex: PropTypes.number,
   squareIndex: PropTypes.number,
-  handleClick: PropTypes.func
+  onClick: PropTypes.func
 }

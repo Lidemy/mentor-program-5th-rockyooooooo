@@ -1,7 +1,7 @@
 import BoardRow from './BoardRow'
 import PropTypes from 'prop-types'
 
-export default function Board({ squares, handleClick }) {
+export default function Board({ squares, onClick }) {
   return (
     <div>
       {squares.map((row, index) => {
@@ -10,7 +10,7 @@ export default function Board({ squares, handleClick }) {
             key={`rowKey${index}`}
             row={row}
             boardRowIndex={index}
-            handleClick={handleClick} 
+            onClick={onClick} 
           />
         )
       })}
@@ -28,5 +28,5 @@ Board.propTypes = {
       ])
     )
   ),
-  handleClick: PropTypes.func
+  onClick: PropTypes.func
 }

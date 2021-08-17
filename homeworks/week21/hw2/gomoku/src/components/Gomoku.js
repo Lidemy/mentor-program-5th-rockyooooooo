@@ -32,11 +32,10 @@ const Subtitle = styled.h2`
   font-size: 2rem;
 `
 
-const Info = styled.div`
-  width: 15rem;
-`
+const Info = styled.div``
 
 const Status = styled.div`
+  width: 15rem;
   font-size: 1.5rem;
   text-transform: capitalize;
 `
@@ -56,30 +55,50 @@ export default function Gomoku() {
   }])
   const [isBlackNext, setIsBlackNext] = useState(true)
   const [status, setStatus] = useState('')
+  const [winner, setWinner] = useState('')
   const [round, setRound] = useState(0)
+
   const current = history[round].squares
 
+  const jumpTo = (step) => {
+    return () => {
+      setRound(step)
+      setIsBlackNext(!(step % 2))
+      setWinner('')
+    }
+  }
+
+  const moves = history.map((move, step) => {
+    const description = step ?
+      `Go to Move ${step}` :
+      `Go to Game Start`
+    return (
+      <li key={step}>
+        <button onClick={jumpTo(step)}>{description}</button>
+      </li>
+    )
+  })
+
   useEffect(() => {
-    const winner = calculateWinner(current)
     setStatus(winner ?
       `Winner is: 🎉${winner}🎉` :
       `嗯～下面一位：${isBlackNext ? 'Black' : 'White'}`
     )
-  }, [current, isBlackNext])
+  }, [winner, isBlackNext])
 
-  const handleClick = (boardRowIndex, squareIndex) => {
+  const handleClick = (y, x) => {
     return () => {
-      if (calculateWinner(current)) return
+      if (current[y][x] || winner) return
 
-      if (current[boardRowIndex][squareIndex]) return
-      const newHistory = history.slice()
+      const newHistory = JSON.parse(JSON.stringify(history.slice(0, round + 1)))
       const squares = current.slice()
-      squares[boardRowIndex][squareIndex] = isBlackNext ? 'black' : 'white'
+      squares[y][x] = isBlackNext ? 'black' : 'white'
       setHistory(newHistory.concat([{
         squares
       }]))
       setIsBlackNext(!isBlackNext)
       setRound(newHistory.length)
+      setWinner(calculateWinner(squares, y, x) ? squares[y][x] : '')
     }
   }
 
@@ -90,104 +109,36 @@ export default function Gomoku() {
           <Title>五子棋</Title>
           <Subtitle>Gomoku</Subtitle>
         </Header>
-        <Board squares={current} handleClick={handleClick} />
+        <Board squares={current} onClick={handleClick} />
       </Main>
       <Info>
         <Status>
           {status}
         </Status>
+        <ol>{moves}</ol>
       </Info>
     </StyledGomoku>
   )
 }
 
-const calculateWinner = (squares) => {
-  const winner = searchRow(squares) || searchColumn(squares) || searchSlash(squares) || searchBackslash(squares)
-  return winner
+const calculateWinner = (squares, y, x) => {
+  return countContinuousChess(squares, x, y, 1, 0) + countContinuousChess(squares, x, y, -1, 0) >= 4 ||
+    countContinuousChess(squares, x, y, 0, 1) + countContinuousChess(squares, x, y, 0, -1) >=4 ||
+    countContinuousChess(squares, x, y, -1, -1) + countContinuousChess(squares, x, y, 1, 1) >=4 ||
+    countContinuousChess(squares, x, y, 1, -1) + countContinuousChess(squares, x, y, -1, 1) >=4
 }
 
-const searchRow = (squares) => {
-  let current = null
-  let count = 1
-  for(let i = 0; i < squares.length; i++) {
-    for(let j = 0; j < squares[i].length; j++) {
-      if (!squares[i][j] || current !== squares[i][j]) {
-        current = squares[i][j]
-        count = 1
-      } else {
-        count++
-      }
+const countContinuousChess = (squares, currentX, currentY, directionX, directionY) => {
+  const targetColor = squares[currentY][currentX]
+  let tempX = currentX + directionX
+  let tempY = currentY + directionY
+  let total = 0
 
-      if (count === 5) return current
-    }
+  while(squares[tempY][tempX] === targetColor) {
+    total++
+    tempX += directionX
+    tempY += directionY
   }
-  return null
-}
 
-const searchColumn = (squares) => {
-  let current = null
-  let count = 1
-  for(let i = 0; i < squares.length; i++) {
-    for(let j = 0; j < squares[i].length; j++) {
-      if (!squares[j][i] || current !== squares[j][i]) {
-        current = squares[j][i]
-        count = 1
-      } else {
-        count++
-      }
-
-      if (count === 5) return current
-    }
-  }
-  return null
-}
-
-const searchSlash = (squares) => {
-  let current = null
-  let count = 1
-  for(let i = 0; i < squares.length; i++) {
-    for(let j = 0; j < squares[i].length; j++) {
-      if (!squares[i][j]) {
-        current = squares[i][j]
-        count = 1
-      } else {
-        current = squares[i][j]
-        for(let k = 1; k < 5; k++) {
-          if (current !== squares[i + k][j - k]) {
-            count = 1
-            break
-          }
-          count++
-        }
-      }
-
-      if (count === 5) return current
-    }
-  }
-  return null
-}
-
-const searchBackslash = (squares) => {
-  let current = null
-  let count = 1
-  for(let i = 0; i < squares.length; i++) {
-    for(let j = 0; j < squares[i].length; j++) {
-      if (!squares[i][j]) {
-        current = squares[i][j]
-        count = 1
-      } else {
-        current = squares[i][j]
-        for(let k = 1; k < 5; k++) {
-          if (current !== squares[i + k][j + k]) {
-            count = 1
-            break
-          }
-          count++
-        }
-      }
-
-      if (count === 5) return current
-    }
-  }
-  return null
+  return total
 }

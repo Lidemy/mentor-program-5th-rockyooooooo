@@ -8,10 +8,10 @@ const StyledSquare = styled.div`
   position: relative;
   display: inline-block;
   border: 1px solid black;
-  padding: 1rem;
+  padding: 0.75rem;
 `
 
-export default function Square({ square, boardRowIndex, squareIndex, handleClick }) {
+export default function Square({ square, boardRowIndex, squareIndex, onClick }) {
   return (
     <StyledSquare>
       {
@@ -22,7 +22,7 @@ export default function Square({ square, boardRowIndex, squareIndex, handleClick
           square={square}
           boardRowIndex={boardRowIndex}
           squareIndex={squareIndex}
-          handleClick={handleClick}
+          onClick={onClick}
         />
       }
     </StyledSquare>
@@ -37,5 +37,5 @@ Square.propTypes = {
   ]),
   boardRowIndex: PropTypes.number,
   squareIndex: PropTypes.number,
-  handleClick: PropTypes.func
+  onClick: PropTypes.func
 }
