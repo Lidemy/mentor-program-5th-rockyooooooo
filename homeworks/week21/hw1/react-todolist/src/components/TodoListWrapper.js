@@ -47,7 +47,11 @@ export default function TodoListWrapper({ todos, setTodos, filter, setFilter }) 
     }
   }
 
-  const handleRemoveAllTodosButtonClick = () => setTodos([])
+  const handleRemoveAllTodosButtonClick = () => {
+    if (!todos.length) return
+    setTodos([])
+  }
+
   return (
     <TodoListWrapperItem>
       <TodosFilter filter={filter} setFilter={setFilter} />
