@@ -1,5 +1,3 @@
-# Week22 簡答題
-
 ## 請列出 React 內建的所有 hook，並大概講解功能是什麼
 
 ### useState
@@ -406,5 +404,3 @@ controlled component 讓我們在做表單的即時驗證非常方便，因為 v
 ---
 
 1. [React-Champ: Part II: When and how to use uncontrolled components](https://medium.com/@adarshsingh1407/react-champ-part-ii-when-to-use-controlled-uncontrolled-components-870f42cf398)
-
-###### tags: `Week22`, `Lidemy-MTR05`

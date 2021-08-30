@@ -8,6 +8,12 @@ import { newPost } from "../../WebAPI"
 const PostForm = styled(Form)`
   gap: 1rem;
   width: 50rem;
+
+  @media screen and (max-width: 1024px) {
+    & {
+      width: 100%;
+    }
+  }
 `
 
 const TextArea = styled.textarea`
