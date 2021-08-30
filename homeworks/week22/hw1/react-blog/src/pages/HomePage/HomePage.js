@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import Post from '../../components/utils/Post'
@@ -31,7 +31,7 @@ const HomePage = ({ setIsLoading }) => {
   const [posts, setPosts] = useState([])
   const [years, setYears] = useState([])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setIsLoading(true)
     getPosts().then((posts) => {
       setPosts(posts)

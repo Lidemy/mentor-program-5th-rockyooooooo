@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import ReactLoading from 'react-loading';
@@ -27,7 +27,7 @@ const ListPage = ({ setIsLoading }) => {
   const [lastPage, setLastPage] = useState(0)
   const [isPaginationLoading, setPaginationIsLoading] = useState(false)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setIsLoading(true)
     getPosts().then((posts) => {
       setLastPage(Math.ceil(posts.length / 5))

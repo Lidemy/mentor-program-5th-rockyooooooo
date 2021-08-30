@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
@@ -49,7 +49,7 @@ const PostPage = ({ setIsLoading }) => {
   const [post, setPost] = useState(null)
   const [user, setUser] = useState(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setIsLoading(true)
     getPost(id).then((data) => {
       setPost(data)
