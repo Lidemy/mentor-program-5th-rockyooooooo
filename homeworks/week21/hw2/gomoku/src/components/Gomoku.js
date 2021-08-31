@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react'
-import Board from './Board'
+import { useState } from 'react'
 import styled from 'styled-components'
+import Board from './Board'
+import TimeTravel from './TimeTravel'
+import { calculateWinner } from '../utils'
+import { HandleClickContext, IsBlackNextContext, WinnerContext } from '../contexts'
 
 export const BOARD_WIDTH = 19
 export const BOARD_HEIGHT = 19
@@ -11,6 +14,13 @@ const StyledGomoku = styled.div`
   justify-content: center;
   height: 100vh;
   gap: 2rem;
+
+  @media screen and (max-width: 900px) {
+    & {
+      flex-direction: column;
+      height: auto;
+    }
+  }
 `
 
 const Main = styled.div`
@@ -18,6 +28,7 @@ const Main = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 2rem;
+  min-width: 494px;
 `
 
 const Header = styled.div`
@@ -32,12 +43,21 @@ const Subtitle = styled.h2`
   font-size: 2rem;
 `
 
-const Info = styled.div``
+const Info = styled.div`
+  margin-top: 9rem;
+
+  @media screen and (max-width: 900px) {
+    & {
+      margin-top: 1rem;
+    }
+  }
+`
 
 const Status = styled.div`
-  width: 15rem;
+  width: 20rem;
   font-size: 1.5rem;
   text-transform: capitalize;
+  margin-bottom: 0.5rem;
 `
 
 const initSquares = []
@@ -50,56 +70,31 @@ for(let i = 0; i < BOARD_HEIGHT; i++) {
 }
 
 export default function Gomoku() {
-  const [history, setHistory] = useState([{
+  const [history, setHistory] = useState(() => [{
     squares: initSquares
   }])
   const [isBlackNext, setIsBlackNext] = useState(true)
-  const [status, setStatus] = useState('')
   const [winner, setWinner] = useState('')
   const [round, setRound] = useState(0)
 
+  const status = winner ?
+  `Winner is: 🎉${winner}🎉` :
+  `Next is：${isBlackNext ? 'Black' : 'White'}`
+
   const current = history[round].squares
 
-  const jumpTo = (step) => {
-    return () => {
-      setRound(step)
-      setIsBlackNext(!(step % 2))
-      setWinner('')
-    }
-  }
-
-  const moves = history.map((move, step) => {
-    const description = step ?
-      `Go to Move ${step}` :
-      `Go to Game Start`
-    return (
-      <li key={step}>
-        <button onClick={jumpTo(step)}>{description}</button>
-      </li>
-    )
-  })
-
-  useEffect(() => {
-    setStatus(winner ?
-      `Winner is: 🎉${winner}🎉` :
-      `嗯～下面一位：${isBlackNext ? 'Black' : 'White'}`
-    )
-  }, [winner, isBlackNext])
-
   const handleClick = (y, x) => {
-    return () => {
-      if (current[y][x] || winner) return
+    if (current[y][x] || winner) return
 
-      const newHistory = JSON.parse(JSON.stringify(history.slice(0, round + 1)))
-      const squares = current.slice()
-      squares[y][x] = isBlackNext ? 'black' : 'white'
-      setHistory(newHistory.concat([{
-        squares
-      }]))
-      setIsBlackNext(!isBlackNext)
-      setRound(newHistory.length)
-      setWinner(calculateWinner(squares, y, x) ? squares[y][x] : '')
-    }
+    const newHistory = JSON.parse(JSON.stringify(history.slice(0, round + 1)))
+    const squares = current.slice()
+    squares[y][x] = isBlackNext ? 'black' : 'white'
+    setHistory(newHistory.concat([{
+      squares
+    }]))
+    setIsBlackNext(!isBlackNext)
+    setRound(newHistory.length)
+    setWinner(calculateWinner(squares, y, x) ? squares[y][x] : '')
   }
 
   return (
@@ -109,36 +104,18 @@ export default function Gomoku() {
           <Title>五子棋</Title>
           <Subtitle>Gomoku</Subtitle>
         </Header>
-        <Board squares={current} onClick={handleClick} />
+        <IsBlackNextContext.Provider value={isBlackNext}>
+          <HandleClickContext.Provider value={handleClick}>
+            <WinnerContext.Provider value={winner}>
+              <Board squares={current} />
+            </WinnerContext.Provider>
+          </HandleClickContext.Provider>
+        </IsBlackNextContext.Provider>
       </Main>
       <Info>
-        <Status>
-          {status}
-        </Status>
-        <ol>{moves}</ol>
+        <Status>{status}</Status>
+        <TimeTravel history={history} setRound={setRound} setWinner={setWinner} setIsBlackNext={setIsBlackNext} />
       </Info>
     </StyledGomoku>
   )
-}
-
-const calculateWinner = (squares, y, x) => {
-  return countContinuousChess(squares, x, y, 1, 0) + countContinuousChess(squares, x, y, -1, 0) >= 4 ||
-    countContinuousChess(squares, x, y, 0, 1) + countContinuousChess(squares, x, y, 0, -1) >=4 ||
-    countContinuousChess(squares, x, y, -1, -1) + countContinuousChess(squares, x, y, 1, 1) >=4 ||
-    countContinuousChess(squares, x, y, 1, -1) + countContinuousChess(squares, x, y, -1, 1) >=4
-}
-
-const countContinuousChess = (squares, currentX, currentY, directionX, directionY) => {
-  const targetColor = squares[currentY][currentX]
-  let tempX = currentX + directionX
-  let tempY = currentY + directionY
-  let total = 0
-
-  while(squares[tempY][tempX] === targetColor) {
-    total++
-    tempX += directionX
-    tempY += directionY
-  }
-
-  return total
 }

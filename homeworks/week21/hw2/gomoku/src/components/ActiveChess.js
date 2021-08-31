@@ -1,26 +1,40 @@
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import { useContext } from 'react'
+import { HandleClickContext, IsBlackNextContext, WinnerContext } from '../contexts'
 
 const StyledActiveChess = styled.div`
   position: absolute;
   z-index: 1;
-  padding: 0.75rem;
+  padding: 1rem;
   border-radius: 50%;
 
-  background: ${(props) => {
-    return props.square === 'black' ?
-    '#000' :
-    props.square === 'white' ?
-    '#fff' :
-    'transparent'
-  }}
+  &:hover {
+    background: ${({ square, isBlackNext, winner }) => {
+      if(square || winner) return
+      return isBlackNext ? '#0008' : '#fff8'
+    }};
+  }
+
+  background: ${(props) => props.square};
+
+  @media screen and (max-width: 1024px) {
+    & {
+      padding: 0.75rem;
+    }
+  }
 `
 
-export default function ActiveChess({ square, boardRowIndex, squareIndex, onClick }) {
+export default function ActiveChess({ square, boardRowIndex, squareIndex }) {
+  const isBlackNext = useContext(IsBlackNextContext)
+  const handleClick = useContext(HandleClickContext)
+  const winner = useContext(WinnerContext)
   return (
     <StyledActiveChess
       square={square}
-      onClick={onClick(boardRowIndex, squareIndex)}
+      onClick={() => handleClick(boardRowIndex, squareIndex)}
+      isBlackNext={isBlackNext}
+      winner={winner}
     />
   )
 }
@@ -32,6 +46,5 @@ ActiveChess.propTypes = {
     'white'
   ]),
   boardRowIndex: PropTypes.number,
-  squareIndex: PropTypes.number,
-  onClick: PropTypes.func
+  squareIndex: PropTypes.number
 }

@@ -1,19 +1,16 @@
 import BoardRow from './BoardRow'
 import PropTypes from 'prop-types'
 
-export default function Board({ squares, onClick }) {
+export default function Board({ squares }) {
   return (
     <div>
-      {squares.map((row, index) => {
-        return (
-          <BoardRow
-            key={`rowKey${index}`}
-            row={row}
-            boardRowIndex={index}
-            onClick={onClick} 
-          />
-        )
-      })}
+      {squares.map((row, index) =>
+        <BoardRow
+          key={`rowKey${index}`}
+          row={row}
+          boardRowIndex={index}
+        />
+      )}
     </div>
   )
 }
@@ -27,6 +24,5 @@ Board.propTypes = {
         'white'
       ])
     )
-  ),
-  onClick: PropTypes.func
+  )
 }

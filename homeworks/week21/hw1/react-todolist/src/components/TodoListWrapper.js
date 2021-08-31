@@ -22,39 +22,33 @@ const RemoveAllTodosButton = styled(Button)`
 
 export default function TodoListWrapper({ todos, setTodos, filter, setFilter }) {
   const handleDeleteTodoButtonClick = (id) => {
-    return () => setTodos(todos.filter((todo) => todo.id !== id))
+    setTodos(todos.filter((todo) => todo.id !== id))
   }
 
   const handleTodoCheckBoxChange = (id) => {
-    return () => {
-      setTodos(todos.map((todo) => {
-        return {
-          ...todo,
-          isChecked: todo.id === id ? !todo.isChecked : todo.isChecked
-        }
-      }))
-    }
+    setTodos(todos.map((todo) => {
+      if (todo.id !== id) return todo
+      return {
+        ...todo,
+        isChecked: !todo.isChecked
+      }
+    }))
   }
 
-  const handleTodoContentUpdate = (id) => {
-    return (editedTodoContent) => {
-      setTodos(todos.map((todo) => {
-        return {
-          ...todo,
-          content: todo.id === id ? editedTodoContent : todo.content
-        }
-      }))
-    }
+  const handleTodoContentUpdate = (id, editedTodoContent) => {
+    setTodos(todos.map((todo) => {
+      if (todo.id !== id) return todo
+      return {
+        ...todo,
+        content: editedTodoContent
+      }
+    }))
   }
 
-  const handleRemoveAllTodosButtonClick = () => {
-    if (!todos.length) return
-    setTodos([])
-  }
-
+  const handleRemoveAllTodosButtonClick = () => setTodos([])
   return (
     <TodoListWrapperItem>
-      <TodosFilter filter={filter} setFilter={setFilter} />
+      <TodosFilter setFilter={setFilter} />
       <TodoList>
         {todos
           .filter((todo) => todo.isChecked !== filter)

@@ -6,21 +6,18 @@ const StyledBoardRow = styled.div`
   margin-bottom: -4px;  // 抵銷奇怪的 margin
 `
 
-export default function BoardRow({ row, boardRowIndex, onClick }) {
+export default function BoardRow({ row, boardRowIndex }) {
   return (
-      <StyledBoardRow>
-        {row.map((square, index) => {
-          return (
-            <Square
-              key={`squareKey${index}`}
-              square={square}
-              squareIndex={index}
-              boardRowIndex={boardRowIndex}
-              onClick={onClick}
-            />
-          )
-        })}
-      </StyledBoardRow>
+    <StyledBoardRow>
+      {row.map((square, index) => 
+        <Square
+          key={`squareKey${index}`}
+          square={square}
+          squareIndex={index}
+          boardRowIndex={boardRowIndex}
+        />
+      )}
+    </StyledBoardRow>
   )
 }
 
@@ -32,6 +29,5 @@ BoardRow.propTypes = {
       'white'
     ])
   ),
-  boardRowIndex: PropTypes.number,
-  onClick: PropTypes.func
+  boardRowIndex: PropTypes.number
 }

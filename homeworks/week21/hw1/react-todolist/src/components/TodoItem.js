@@ -36,21 +36,22 @@ const DeleteTodoButton = styled(Button)`
 `
 
 export default function TodoItem({ todo, handleDeleteTodoButtonClick, handleTodoCheckBoxChange, handleTodoContentUpdate }) {
-  const contentEditableClassName = `editableContent ${todo.isChecked ? 'isDone' : ''}`
+  const { id, content, isChecked } = todo
+  const contentEditableClassName = `editableContent ${isChecked ? 'isDone' : ''}`
   return (
-    <TodoItemWrapper $isChecked={todo.isChecked}>
+    <TodoItemWrapper $isChecked={isChecked}>
       <TodoCheckBox
         type="checkbox"
-        checked={todo.isChecked}
-        onChange={handleTodoCheckBoxChange(todo.id)}
+        checked={isChecked}
+        onChange={() => handleTodoCheckBoxChange(id)}
       />
       <ContentEditable
         tagName="pre"
         className={contentEditableClassName}
-        html={todo.content}
-        onChange={(e) => handleTodoContentUpdate(todo.id)(e.target.value)}
+        html={content}
+        onChange={(e) => handleTodoContentUpdate(id, e.target.value)}
       />
-      <DeleteTodoButton onClick={handleDeleteTodoButtonClick(todo.id)}>刪除</DeleteTodoButton>
+      <DeleteTodoButton onClick={() => handleDeleteTodoButtonClick(id)}>刪除</DeleteTodoButton>
     </TodoItemWrapper>
   )
 }
