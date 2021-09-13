@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useState, useLayoutEffect } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import Post from '../../components/utils/Post'
@@ -37,7 +37,7 @@ const HomePage = ({ setIsLoading }) => {
       setPosts(posts)
       setIsLoading(false)
     })
-  }, [])
+  }, [setIsLoading])
 
   useEffect(() => {
     const yearsArray = []

@@ -35,10 +35,14 @@ const Container = styled.div`
 function App() {
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [isUserSet, setIsUserSet] = useState(false)
 
   useEffect(() => {
     const token = getAuthToken()
-    if (!token) return
+    if (!token) {
+      setIsUserSet(true)
+      return
+    }
 
     getMe().then((response) => {
       const { ok, data } = response
@@ -47,6 +51,7 @@ function App() {
         return
       }
       setUser(data)
+      setIsUserSet(true)
     })
   }, [])
 
@@ -54,7 +59,7 @@ function App() {
     <AuthContext.Provider value={{ user, setUser }}>
       <Root>
         <Router>
-          <Header />
+          <Header isUserSet={isUserSet} />
           {isLoading && <LoadingPage />}
           <Container>
             <Switch>

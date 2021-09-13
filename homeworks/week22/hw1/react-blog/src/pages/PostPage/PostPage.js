@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useLayoutEffect, useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
@@ -20,6 +20,8 @@ const Title = styled.h2`
   font-weight: 400;
   line-height: 1.125;
   color: ${blackTitle};
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const Info = styled.div`
@@ -30,6 +32,9 @@ const Info = styled.div`
 
 const Author = styled.span`
   font-size: 1rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `
 
 const Time = styled.span`
@@ -39,37 +44,46 @@ const Time = styled.span`
 
 const Content = styled.main`
   white-space: pre-wrap;
+  word-break: break-word;
   margin-bottom: 4rem;
   color: ${blackDefault};
   font-size: 1.1rem;
 `
+
+const TITLE_MAX_LENGTH = 49
 
 const PostPage = ({ setIsLoading }) => {
   const { id } = useParams()
   const [post, setPost] = useState(null)
   const [user, setUser] = useState(null)
 
-  useLayoutEffect(() => {
+  const asyncDoEffects = useCallback(async (id) => {
     setIsLoading(true)
-    getPost(id).then((data) => {
-      setPost(data)
-    })
-  }, [id])
-
-  useEffect(() => {
-    if (!post) return
-    getUser(post.userId).then((data) => {
-      setUser(data)
-    })
+    const post = await getPost(id)
+    setPost(post)
+    const user = await getUser(post.userId)
+    setUser(user)
     setIsLoading(false)
-  }, [post])
+  }, [setIsLoading])
+
+  useLayoutEffect(() => {
+    asyncDoEffects(id)
+  }, [id, asyncDoEffects])
+
+  const renderTitle = (title) => {
+    if (title.length > TITLE_MAX_LENGTH) {
+      const newTitle = title.slice(0, TITLE_MAX_LENGTH).concat('...')
+      return <Title>{newTitle}</Title>
+    }
+    return <Title>{title}</Title>
+  }
 
   return (
     <>
-      {post && user && <PostContainer>
-          <Title>{post.title}</Title>
+      {user && <PostContainer>
+          {renderTitle(post.title)}
           <Info>
-            <Author>{user && user.nickname}</Author>
+            <Author>{user.nickname}</Author>
             <Time>{moment(post.createdAt).format('YYYY年MM月DD日')}</Time>
           </Info>
           <Content>{post.body}</Content>

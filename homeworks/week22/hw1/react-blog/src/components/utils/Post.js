@@ -27,6 +27,10 @@ const PostTitle = styled(Link)`
   color: #333;
   border-bottom: 1px dotted transparent;
   line-height: 1.125;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 
   &:hover {
     border-bottom-color: darkgray;

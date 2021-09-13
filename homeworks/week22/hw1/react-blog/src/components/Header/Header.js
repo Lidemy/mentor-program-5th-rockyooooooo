@@ -1,6 +1,7 @@
+import { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { Link, NavLink, useHistory, useLocation } from 'react-router-dom'
-import { useContext, useState } from 'react'
+import PropTypes from 'prop-types'
 import { AuthContext } from '../../contexts'
 import { setAuthToken } from '../../utils'
 import { blackDefault, blueLink, grayLine } from '../../constants'
@@ -151,7 +152,7 @@ const activeStyle = {
   color: blueLink
 }
 
-const Header = () => {
+const Header = ({ isUserSet }) => {
   const { user, setUser } = useContext(AuthContext)
   const location = useLocation()
   const history = useHistory()
@@ -174,31 +175,37 @@ const Header = () => {
     <HeaderContainer>
       <Navbar>
         <Brand to="/" onClick={() => setIsHamburgerOpen(false)}>Large</Brand>
-        <Menu isHamburgerOpen={isHamburgerOpen}>
-          <NavbarList>
-            <Nav to="/list" activeStyle={activeStyle} onClick={() => setIsHamburgerOpen(false)}>文章列表</Nav>
-            {user && <Nav to="/new" activeStyle={activeStyle} onClick={() => setIsHamburgerOpen(false)}>發布文章</Nav>}
-            <Nav to="/about" activeStyle={activeStyle} onClick={() => setIsHamburgerOpen(false)}>About</Nav>
-          </NavbarList>
-          <NavbarList>
-            {
-              user ?
-              <Nav to="/" onClick={handleLogout}>登出</Nav> :
-              <>
-                <Nav to="/register" activeStyle={activeStyle} onClick={() => setIsHamburgerOpen(false)}>註冊</Nav>
-                <Nav to="/login" activeStyle={activeStyle} onClick={() => setIsHamburgerOpen(false)}>登入</Nav>
-              </>
-            }
-          </NavbarList>
-        </Menu>
-        <Hamburger onClick={handleHamburgerClick}>
-          <BurgerTop isHamburgerOpen={isHamburgerOpen} />
-          <BurgerMiddle isHamburgerOpen={isHamburgerOpen} />
-          <BurgerBottom isHamburgerOpen={isHamburgerOpen} />
-        </Hamburger>
+        {isUserSet && <>
+          <Menu isHamburgerOpen={isHamburgerOpen}>
+            <NavbarList>
+              <Nav to="/list" activeStyle={activeStyle} onClick={() => setIsHamburgerOpen(false)}>文章列表</Nav>
+              {user && <Nav to="/new" activeStyle={activeStyle} onClick={() => setIsHamburgerOpen(false)}>發布文章</Nav>}
+              <Nav to="/about" activeStyle={activeStyle} onClick={() => setIsHamburgerOpen(false)}>About</Nav>
+            </NavbarList>
+            <NavbarList>
+              {
+                user ?
+                <Nav to="/" onClick={handleLogout}>登出</Nav> :
+                <>
+                  <Nav to="/register" activeStyle={activeStyle} onClick={() => setIsHamburgerOpen(false)}>註冊</Nav>
+                  <Nav to="/login" activeStyle={activeStyle} onClick={() => setIsHamburgerOpen(false)}>登入</Nav>
+                </>
+              }
+            </NavbarList>
+          </Menu>
+          <Hamburger onClick={handleHamburgerClick}>
+            <BurgerTop isHamburgerOpen={isHamburgerOpen} />
+            <BurgerMiddle isHamburgerOpen={isHamburgerOpen} />
+            <BurgerBottom isHamburgerOpen={isHamburgerOpen} />
+          </Hamburger>
+        </>}
       </Navbar>
     </HeaderContainer>
   )
+}
+
+Header.propTypes = {
+  isUserSet: PropTypes.bool
 }
 
 export default Header;
